@@ -34,5 +34,9 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.4.2"
+  },
+  "volta": {
+    "node": "20.11.1",
+    "yarn": "1.22.22"
   }
 }
