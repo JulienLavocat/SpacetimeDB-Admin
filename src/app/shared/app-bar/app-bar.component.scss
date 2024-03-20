@@ -1,0 +1,19 @@
+.id-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .name {
+  }
+
+  .value {
+    margin: 0;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .icon {
+  }
+}
