@@ -1,0 +1,19 @@
+<mat-form-field subscriptSizing="dynamic" class="search">
+  <mat-label>Search logs</mat-label>
+  <input matInput />
+</mat-form-field>
+@if (logs$ | async; as logs) {
+  <ol class="console">
+    @for (log of logs; track log) {
+      <li class="log" [ngClass]="log.level">
+        {{ log.ts }}
+        <span class="level"
+          ><mat-icon [ngClass]="log.level">{{ log.icon }}</mat-icon
+          >{{ log.level.toUpperCase() }}</span
+        >
+        <span class="filename">{{ log.filename }}</span>
+        <span class="message">{{ log.message }}</span>
+      </li>
+    }
+  </ol>
+}
