@@ -7,6 +7,7 @@ import { NgxsModule } from '@ngxs/store';
 import { AppState } from './app.state';
 import { provideHttpClient } from '@angular/common/http';
 import { ApiService } from './api.service';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 
 export class AppConfig {
   apiUrl = 'http://localhost:3000';
@@ -17,7 +18,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     provideHttpClient(),
-    importProvidersFrom(NgxsModule.forRoot([AppState])),
+    importProvidersFrom(
+      NgxsModule.forRoot([AppState], { developmentMode: true }),
+      NgxsReduxDevtoolsPluginModule.forRoot(),
+    ),
     AppConfig,
     ApiService,
   ],

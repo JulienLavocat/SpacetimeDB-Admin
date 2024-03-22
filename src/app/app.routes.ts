@@ -4,6 +4,7 @@ import { NgxsModule } from '@ngxs/store';
 import { AppState } from './app.state';
 import { LogsExplorerComponent } from './logs-explorer/logs-explorer.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { LogsState } from './logs-explorer/logs.state';
 
 export const routes: Routes = [
   {
@@ -14,6 +15,8 @@ export const routes: Routes = [
   {
     path: 'logs',
     component: LogsExplorerComponent,
-    providers: [importProvidersFrom(NgxsModule.forFeature([AppState]))],
+    providers: [
+      importProvidersFrom(NgxsModule.forFeature([AppState, LogsState])),
+    ],
   },
 ];

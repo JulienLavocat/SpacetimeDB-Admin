@@ -1,6 +1,7 @@
 <mat-form-field subscriptSizing="dynamic" class="search">
+  <mat-icon matIconPrefix>search</mat-icon>
   <mat-label>Search logs</mat-label>
-  <input matInput />
+  <input matInput (keyup)="setLogsFilter($event)" />
 </mat-form-field>
 @if (logs$ | async; as logs) {
   <ol class="console">

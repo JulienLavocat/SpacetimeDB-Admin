@@ -11,7 +11,6 @@ export interface AppStateModel {
     identity: string;
   };
   token: string;
-  logs: LogLine[];
 }
 
 @Injectable()
@@ -25,7 +24,6 @@ export interface AppStateModel {
       address: '',
       identity: '',
     },
-    logs: [],
   },
 })
 export class AppState implements NgxsOnInit {
@@ -46,8 +44,8 @@ export class AppState implements NgxsOnInit {
   }
 
   @Selector()
-  static logs(state: AppStateModel) {
-    return state.logs;
+  static token(state: AppStateModel) {
+    return state.token;
   }
 
   @Action(AppInitAction)
@@ -61,15 +59,6 @@ export class AppState implements NgxsOnInit {
           },
         }),
       ),
-    );
-  }
-
-  @Action(FetchLogsAction)
-  fetchLogs(ctx: StateContext<AppStateModel>) {
-    return this.api.getLogs(ctx.getState().name, ctx.getState().token).pipe(
-      tap((logs) => {
-        ctx.patchState({ logs });
-      }),
     );
   }
 }
