@@ -1,10 +1,15 @@
 @if (infos$ | async; as infos) {
-  <mat-toolbar color="primary">
+  <mat-toolbar class="toolbar">
     <span>{{ infos.name }}</span>
     <div class="id-field">
       <span class="name">ID</span>
       <p class="value">{{ infos.identity }}</p>
-      <mat-icon>content_copy</mat-icon>
+      <mat-icon class="icon">content_copy</mat-icon>
+    </div>
+    <div class="id-field">
+      <span class="name">Addr</span>
+      <p class="value">{{ infos.address }}</p>
+      <mat-icon class="icon">content_copy</mat-icon>
     </div>
   </mat-toolbar>
 }

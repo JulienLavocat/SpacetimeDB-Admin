@@ -4,6 +4,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router';
 import { AppBarComponent } from '../app-bar/app-bar.component';
 import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-layout',
@@ -14,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
     RouterModule,
     AppBarComponent,
     MatIconModule,
+    CommonModule,
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',

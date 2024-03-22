@@ -11,6 +11,9 @@ export const routes: Routes = [
     path: '',
     pathMatch: 'full',
     component: DashboardComponent,
+    data: {
+      title: 'Dashboard',
+    },
   },
   {
     path: 'logs',
@@ -18,5 +21,8 @@ export const routes: Routes = [
     providers: [
       importProvidersFrom(NgxsModule.forFeature([AppState, LogsState])),
     ],
+    data: {
+      title: 'Logs',
+    },
   },
 ];

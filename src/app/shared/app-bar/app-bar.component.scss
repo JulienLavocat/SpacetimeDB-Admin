@@ -1,9 +1,17 @@
+.toolbar {
+  gap: 1rem;
+}
+
 .id-field {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  background: #202126;
+  border-radius: 4px;
+  padding: 4px 8px;
 
   .name {
+    color: #4cf490;
   }
 
   .value {
@@ -15,5 +23,6 @@
   }
 
   .icon {
+    cursor: pointer;
   }
 }
