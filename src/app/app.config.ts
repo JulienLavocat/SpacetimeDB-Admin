@@ -8,6 +8,7 @@ import { AppState } from './app.state';
 import { provideHttpClient } from '@angular/common/http';
 import { ApiService } from './api.service';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { LogsState } from './logs-explorer/logs.state';
 
 export class AppConfig {
   apiUrl = 'http://localhost:3000';
@@ -19,7 +20,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(),
     importProvidersFrom(
-      NgxsModule.forRoot([AppState], { developmentMode: true }),
+      NgxsModule.forRoot([AppState, LogsState], { developmentMode: true }),
       NgxsReduxDevtoolsPluginModule.forRoot(),
     ),
     AppConfig,

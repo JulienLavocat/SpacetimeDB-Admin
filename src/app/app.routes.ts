@@ -1,10 +1,7 @@
-import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
-import { NgxsModule } from '@ngxs/store';
-import { AppState } from './app.state';
 import { LogsExplorerComponent } from './logs-explorer/logs-explorer.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { LogsState } from './logs-explorer/logs.state';
+import { SetDatabaseComponent } from './set-database/set-database.component';
 
 export const routes: Routes = [
   {
@@ -18,11 +15,15 @@ export const routes: Routes = [
   {
     path: 'logs',
     component: LogsExplorerComponent,
-    providers: [
-      importProvidersFrom(NgxsModule.forFeature([AppState, LogsState])),
-    ],
     data: {
       title: 'Logs',
     },
+  },
+  {
+    path: 'set-database',
+    data: {
+      title: 'Set database',
+    },
+    component: SetDatabaseComponent,
   },
 ];

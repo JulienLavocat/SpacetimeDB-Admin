@@ -11,3 +11,12 @@ export class SetLogsFilter {
 
   constructor(public filter: string) {}
 }
+
+export class SetDatabaseAction {
+  public static type = '[AppState] Set Database';
+
+  constructor(
+    public name: string,
+    public token: string,
+  ) {}
+}

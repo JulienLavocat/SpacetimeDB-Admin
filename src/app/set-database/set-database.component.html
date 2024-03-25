@@ -1,0 +1,13 @@
+@if (form$ | async; as form) {
+  <form [formGroup]="form" (submit)="onSubmit(form)" class="form">
+    <mat-form-field>
+      <mat-label>Database name</mat-label>
+      <input matInput formControlName="name" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Token</mat-label>
+      <input matInput formControlName="token" />
+    </mat-form-field>
+    <button mat-raised-button type="submit" color="primary">Update</button>
+  </form>
+}

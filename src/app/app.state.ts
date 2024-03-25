@@ -1,6 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
-import { AppInitAction, FetchLogsAction } from './app.actions';
+import {
+  AppInitAction,
+  FetchLogsAction,
+  SetDatabaseAction,
+} from './app.actions';
 import { ApiService, LogLine } from './api.service';
 import { combineLatest, tap } from 'rxjs';
 
@@ -17,9 +21,9 @@ export interface AppStateModel {
 @State<AppStateModel>({
   name: 'appState',
   defaults: {
-    name: 'test',
+    name: 'dev',
     token:
-      'eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJoZXhfaWRlbnRpdHkiOiI1ZWJkMTIyMWFmYjEwYWFmNjFkNmM4YTUyNzQxM2Q4MmExYWQ5ZWU5YWM5ZWE0MjBlOGRjODBkYzkzNTAzOTRlIiwiaWF0IjoxNzEwODU3Mjc2LCJleHAiOm51bGx9.xsx-V8_8fkE6H-NxCMgoHUgd8wyrSE-_zCeslzrTVxtgWEUNDN0V6cnqWgV0k8tuArSZBuhaT8WiNqhrgjIXZA',
+      'eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJoZXhfaWRlbnRpdHkiOiI1ZmM5YzEwMmM2OTRhOGJkN2E5NmUzNTg4YmQwZjc2MGFhNGE1MTkxNWViZmNkNzhjYWEwNjk5NWNkNWIzOGI5IiwiaWF0IjoxNzExMjczNDAxLCJleHAiOm51bGx9.cby7rQMwC3UKvIwJ2W8k5BP9_f3I5jIGWhVxmE55szCDfWu8PJQrn-FtaqQbFVi7HOJzva-lXidmycCQXF_HJw',
     infos: {
       address: '',
       identity: '',
@@ -60,5 +64,15 @@ export class AppState implements NgxsOnInit {
         }),
       ),
     );
+  }
+
+  @Action(SetDatabaseAction)
+  setDatabase(ctx: StateContext<AppStateModel>, action: SetDatabaseAction) {
+    ctx.patchState({
+      token: action.token,
+      name: action.name,
+    });
+
+    return ctx.dispatch(new AppInitAction());
   }
 }
