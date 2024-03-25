@@ -26,7 +26,7 @@ export class ApiService {
 
   getLogs(name: string, token: string): Observable<LogLine[]> {
     return this.http
-      .get(`${this.config.apiUrl}/database/logs/${name}?num_lines=1000`, {
+      .get(`${this.config.apiUrl}/database/logs/${name}?num_lines=300`, {
         headers: this.getAuthorizationHeader(token),
         responseType: 'arraybuffer',
       })

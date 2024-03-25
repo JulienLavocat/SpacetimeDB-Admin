@@ -3,6 +3,7 @@ $navbar-height: 64px;
 $search-height: 56px;
 
 :host {
+  max-height: calc(100vh - $navbar-height);
 }
 
 .search {

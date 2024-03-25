@@ -1,6 +1,8 @@
+$navbar-height: 64px;
+
 :host {
   display: block;
-  height: 100%;
+  height: calc(100vh - $navbar-height);
 }
 
 .db-name {
