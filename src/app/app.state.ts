@@ -1,15 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
-import {
-  AppInitAction,
-  FetchLogsAction,
-  SetDatabaseAction,
-} from './app.actions';
-import { ApiService, LogLine } from './api.service';
-import { combineLatest, tap } from 'rxjs';
+import { AppInitAction, SetDatabaseAction } from './app.actions';
+import { ApiService } from './api.service';
+import { of, tap } from 'rxjs';
+
+const LS_DB = 'dbName';
+const LS_TOKEN = 'token';
 
 export interface AppStateModel {
-  name: string;
+  database: string;
   infos: {
     address: string;
     identity: string;
@@ -21,9 +20,8 @@ export interface AppStateModel {
 @State<AppStateModel>({
   name: 'appState',
   defaults: {
-    name: 'dev',
-    token:
-      'eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJoZXhfaWRlbnRpdHkiOiI1ZmM5YzEwMmM2OTRhOGJkN2E5NmUzNTg4YmQwZjc2MGFhNGE1MTkxNWViZmNkNzhjYWEwNjk5NWNkNWIzOGI5IiwiaWF0IjoxNzExMjczNDAxLCJleHAiOm51bGx9.cby7rQMwC3UKvIwJ2W8k5BP9_f3I5jIGWhVxmE55szCDfWu8PJQrn-FtaqQbFVi7HOJzva-lXidmycCQXF_HJw',
+    database: '',
+    token: '',
     infos: {
       address: '',
       identity: '',
@@ -43,8 +41,8 @@ export class AppState implements NgxsOnInit {
   }
 
   @Selector()
-  static dbName(state: AppStateModel) {
-    return state.name;
+  static database(state: AppStateModel) {
+    return state.database;
   }
 
   @Selector()
@@ -54,8 +52,11 @@ export class AppState implements NgxsOnInit {
 
   @Action(AppInitAction)
   init(ctx: StateContext<AppStateModel>) {
-    return combineLatest([this.api.getInfos(ctx.getState().name)]).pipe(
-      tap(([infos]) =>
+    const database = localStorage.getItem(LS_DB) ?? '';
+    const token = localStorage.getItem(LS_TOKEN) ?? '';
+    ctx.patchState({ database, token });
+    return this.api.getInfos(database).pipe(
+      tap((infos) =>
         ctx.patchState({
           infos: {
             address: infos.address,
@@ -68,10 +69,8 @@ export class AppState implements NgxsOnInit {
 
   @Action(SetDatabaseAction)
   setDatabase(ctx: StateContext<AppStateModel>, action: SetDatabaseAction) {
-    ctx.patchState({
-      token: action.token,
-      name: action.name,
-    });
+    localStorage.setItem(LS_DB, action.name);
+    localStorage.setItem(LS_TOKEN, action.token);
 
     return ctx.dispatch(new AppInitAction());
   }

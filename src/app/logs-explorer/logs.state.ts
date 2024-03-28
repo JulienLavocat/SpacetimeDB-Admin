@@ -47,7 +47,7 @@ export class LogsState {
   fetchLogs(ctx: StateContext<LogsStateModel>) {
     return this.api
       .getLogs(
-        this.store.selectSnapshot(AppState.dbName),
+        this.store.selectSnapshot(AppState.database),
         this.store.selectSnapshot(AppState.token),
       )
       .pipe(

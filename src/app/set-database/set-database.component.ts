@@ -35,7 +35,7 @@ export class SetDatabaseComponent {
   private readonly store = inject(Store);
 
   protected form$ = combineLatest([
-    this.store.select(AppState.dbName),
+    this.store.select(AppState.database),
     this.store.select(AppState.token),
   ]).pipe(
     map(([db, token]) =>

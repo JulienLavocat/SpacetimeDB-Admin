@@ -28,6 +28,6 @@ export class AppBarComponent {
 
   infos$ = combineLatest([
     this.store.select(AppState.infos),
-    this.store.select(AppState.dbName),
+    this.store.select(AppState.database),
   ]).pipe(map(([infos, name]) => ({ ...infos, name })));
 }
