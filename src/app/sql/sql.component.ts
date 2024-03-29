@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -11,9 +11,9 @@ import { CommonModule } from '@angular/common';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { FormsModule } from '@angular/forms';
 import type { editor } from 'monaco-editor';
-import { MatTableModule } from '@angular/material/table';
-import { map } from 'rxjs';
-import { DataSource } from '@angular/cdk/collections';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { map, tap } from 'rxjs';
 
 @Component({
   selector: 'app-sql',
@@ -28,11 +28,14 @@ import { DataSource } from '@angular/cdk/collections';
     MatCardModule,
     MatListModule,
     MatTableModule,
+    MatPaginatorModule,
   ],
   templateUrl: './sql.component.html',
   styleUrl: './sql.component.scss',
 })
 export class SqlComponent implements OnInit {
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+
   private readonly store = inject(Store);
 
   protected tables$ = this.store.select(SqlState.tables);
@@ -47,7 +50,19 @@ export class SqlComponent implements OnInit {
   protected query = 'SELECT * FROM StarSystem';
   protected responseDetails$ = this.store.select(SqlState.responseDetails);
   protected error$ = this.store.select(SqlState.error);
-  protected results$ = this.store.select(SqlState.results).pipe();
+  protected results$ = this.store.select(SqlState.results).pipe(
+    map((results) => {
+      if (results === null) return null;
+      const dataSource = new MatTableDataSource(results?.rows);
+      setTimeout(() => {
+        dataSource.paginator = this.paginator;
+      });
+      return {
+        ...results,
+        rows: dataSource,
+      };
+    }),
+  );
 
   ngOnInit(): void {
     this.store.dispatch(new LoadTablesAction());
