@@ -18,7 +18,6 @@ $search-height: 56px;
   text-decoration: none;
   padding: $console-padding;
   margin: 0;
-  max-width: calc(100vw - 290px);
   overflow-y: auto;
   background: rgb(33, 35, 46);
   max-height: calc(
@@ -30,7 +29,7 @@ $search-height: 56px;
 .log {
   display: flex;
   gap: 1rem;
-  min-height: 2rem;
+  min-height: 1.5rem;
   align-items: center;
   color: white;
 
@@ -43,6 +42,10 @@ $search-height: 56px;
   }
   &.panic {
     background-color: #c11d4a29;
+  }
+
+  .ts {
+    white-space: nowrap;
   }
 
   .level {

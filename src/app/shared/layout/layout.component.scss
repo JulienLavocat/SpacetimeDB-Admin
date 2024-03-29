@@ -16,7 +16,10 @@ $navbar-height: 64px;
 .sidenav {
   height: 100%;
 
-  .menu {
-    width: 290px;
+  .links {
+    padding: 0;
+    .item {
+      width: 100%;
+    }
   }
 }

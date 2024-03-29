@@ -15,6 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { combineLatest, map } from 'rxjs';
 import { AppState } from '../app.state';
 import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-set-database',
@@ -26,6 +27,7 @@ import { CommonModule } from '@angular/common';
     MatButtonModule,
     ReactiveFormsModule,
     CommonModule,
+    MatCardModule,
   ],
   templateUrl: './set-database.component.html',
   styleUrl: './set-database.component.scss',

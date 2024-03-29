@@ -29,6 +29,7 @@ import { map } from 'rxjs';
     MatListModule,
     MatTableModule,
     MatPaginatorModule,
+    MatCardModule,
   ],
   templateUrl: './sql.component.html',
   styleUrl: './sql.component.scss',

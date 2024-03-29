@@ -7,7 +7,7 @@
   <ol class="console">
     @for (log of logs; track log) {
       <li class="log" [ngClass]="log.level">
-        {{ log.ts }}
+        <span class="ts">{{ log.ts }}</span>
         <span class="level"
           ><mat-icon [ngClass]="log.level">{{ log.icon }}</mat-icon
           >{{ log.level.toUpperCase() }}</span

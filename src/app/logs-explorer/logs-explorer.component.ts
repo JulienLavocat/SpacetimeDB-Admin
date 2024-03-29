@@ -8,11 +8,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { LogsState } from './logs.state';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-logs-explorer',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatFormFieldModule, MatInputModule],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCardModule,
+  ],
   templateUrl: './logs-explorer.component.html',
   styleUrl: './logs-explorer.component.scss',
 })

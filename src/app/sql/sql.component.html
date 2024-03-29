@@ -16,7 +16,7 @@
       }
       <button mat-raised-button (click)="runQuery()">Run query</button>
     </div>
-    <div class="content">
+    <mat-card class="content">
       @if (error$ | async; as error) {
         <p class="error">{{ error }}</p>
       }
@@ -43,6 +43,6 @@
           pageSize="100"
         ></mat-paginator>
       }
-    </div>
+    </mat-card>
   </div>
 </div>
