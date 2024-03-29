@@ -22,6 +22,7 @@ export class LogsExplorerComponent implements OnInit {
   logs$ = this.store.select(LogsState.logs).pipe();
 
   ngOnInit(): void {
+    this.store.dispatch(new FetchLogsAction());
     interval(1000)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
