@@ -1,9 +1,9 @@
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { FetchLogsAction, SetLogsFilter } from '../app.actions';
-import { AppState } from '../app.state';
 import { Injectable, inject } from '@angular/core';
-import { ApiService, LogLine } from '../api.service';
+import { ApiService } from '../api.service';
 import { tap } from 'rxjs';
+import { LogLine } from '../api.types';
 
 interface LogsStateModel {
   logs: LogLine[];
@@ -24,7 +24,6 @@ const levelInfos: Record<string, string> = {
 @Injectable()
 export class LogsState {
   private readonly api = inject(ApiService);
-  private readonly store = inject(Store);
 
   @Selector()
   static logs(state: LogsStateModel) {
@@ -45,16 +44,11 @@ export class LogsState {
 
   @Action(FetchLogsAction)
   fetchLogs(ctx: StateContext<LogsStateModel>) {
-    return this.api
-      .getLogs(
-        this.store.selectSnapshot(AppState.database),
-        this.store.selectSnapshot(AppState.token),
-      )
-      .pipe(
-        tap((logs) => {
-          ctx.patchState({ logs });
-        }),
-      );
+    return this.api.getLogs().pipe(
+      tap((logs) => {
+        ctx.patchState({ logs });
+      }),
+    );
   }
 
   @Action(SetLogsFilter)

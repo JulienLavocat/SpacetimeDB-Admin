@@ -55,7 +55,7 @@ export class AppState implements NgxsOnInit {
     const database = localStorage.getItem(LS_DB) ?? '';
     const token = localStorage.getItem(LS_TOKEN) ?? '';
     ctx.patchState({ database, token });
-    return this.api.getInfos(database).pipe(
+    return this.api.getInfos().pipe(
       tap((infos) =>
         ctx.patchState({
           infos: {
