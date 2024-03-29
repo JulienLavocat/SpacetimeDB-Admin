@@ -1,62 +1,48 @@
-<mat-card class="container">
-  <mat-drawer-container class="drawer-container" autosize>
-    <mat-drawer mode="side" opened>
-      <h3 class="section-title">Tables</h3>
-      <mat-action-list>
-        @if (tables$ | async; as tables) {
-          @for (table of tables; track table) {
-            <button mat-list-item>{{ table }}</button>
-          }
-        }
-      </mat-action-list></mat-drawer
-    >
-    <mat-drawer-content>
-      <div class="flex-container">
-        <div class="query-editor">
-          <ngx-monaco-editor
-            style="height: 100%"
-            [options]="editorOptions"
-            [(ngModel)]="query"
-          ></ngx-monaco-editor>
-        </div>
-        <div class="query-results">
-          <div class="header">
-            @if (responseDetails$ | async; as responseDetails) {
-              <p class="results-infos">
-                <mat-icon>play_arrow</mat-icon> {{ responseDetails.count }} rows
-                - {{ responseDetails.duration }}ms
-              </p>
-            }
-            <button mat-raised-button (click)="runQuery()">Run query</button>
-          </div>
-          <div class="content">
-            @if (error$ | async; as error) {
-              <p class="error">{{ error }}</p>
-            }
+<div class="flex-container">
+  <div class="query-editor">
+    <ngx-monaco-editor
+      style="height: 100%"
+      [options]="editorOptions"
+      [(ngModel)]="query"
+    ></ngx-monaco-editor>
+  </div>
+  <div class="query-results">
+    <div class="header">
+      @if (responseDetails$ | async; as responseDetails) {
+        <p class="results-infos">
+          <mat-icon>play_arrow</mat-icon> {{ responseDetails.count }} rows -
+          {{ responseDetails.duration }}ms
+        </p>
+      }
+      <button mat-raised-button (click)="runQuery()">Run query</button>
+    </div>
+    <div class="content">
+      @if (error$ | async; as error) {
+        <p class="error">{{ error }}</p>
+      }
 
-            @if (results$ | async; as results) {
-              <table mat-table [dataSource]="results.rows">
-                @for (column of results.columns; track column) {
-                  <ng-container [matColumnDef]="column" [sticky]="true">
-                    <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
-                    <td mat-cell *matCellDef="let element">
-                      {{ element[column] }}
-                    </td>
-                  </ng-container>
-                }
-                <tr
-                  mat-header-row
-                  *matHeaderRowDef="results.columns; sticky: true"
-                ></tr>
-                <tr mat-row *matRowDef="let row; columns: results.columns"></tr>
-              </table>
-              <mat-paginator
-                [pageSizeOptions]="[10, 25, 50, 100]"
-              ></mat-paginator>
-            }
-          </div>
-        </div>
-      </div>
-    </mat-drawer-content>
-  </mat-drawer-container>
-</mat-card>
+      @if (results$ | async; as results) {
+        <table mat-table [dataSource]="results.rows" class="table">
+          @for (column of results.columns; track column) {
+            <ng-container [matColumnDef]="column" [sticky]="true">
+              <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element[column] }}
+              </td>
+            </ng-container>
+          }
+          <tr
+            mat-header-row
+            *matHeaderRowDef="results.columns; sticky: true"
+          ></tr>
+          <tr mat-row *matRowDef="let row; columns: results.columns"></tr>
+        </table>
+        <mat-paginator
+          class="paginator"
+          [pageSizeOptions]="[10, 25, 50, 100]"
+          pageSize="100"
+        ></mat-paginator>
+      }
+    </div>
+  </div>
+</div>

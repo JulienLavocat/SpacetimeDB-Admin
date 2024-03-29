@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 import type { editor } from 'monaco-editor';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { map, tap } from 'rxjs';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-sql',
