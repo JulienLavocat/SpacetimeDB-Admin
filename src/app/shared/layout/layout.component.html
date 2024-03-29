@@ -2,16 +2,21 @@
 <mat-drawer-container class="sidenav">
   <mat-drawer mode="side" opened class="menu">
     <mat-nav-list class="links">
-      <a mat-list-item routerLink="/"
-        ><mat-icon matListItemIcon>home</mat-icon> Dashboard</a
+      <a mat-list-item routerLink="/">
+        <mat-icon matListItemIcon>home</mat-icon> Dashboard</a
       >
-      <a mat-list-item routerLink="/logs"
-        ><mat-icon matListItemIcon>article</mat-icon>Logs</a
+      <a mat-list-item routerLink="/logs">
+        <mat-icon matListItemIcon>article</mat-icon>Logs</a
       >
-      <a mat-list-item routerLink="/sql"
-        ><mat-icon matListItemIcon fontSet="material-symbols-outlined"
+      <a mat-list-item routerLink="/sql">
+        <mat-icon matListItemIcon fontSet="material-symbols-outlined"
           >database</mat-icon
         >SQL</a
+      >
+      <a mat-list-item routerLink="/schema">
+        <mat-icon matListItemIcon fontSet="material-symbols-outlined"
+          >schema</mat-icon
+        >Schema</a
       >
     </mat-nav-list>
   </mat-drawer>

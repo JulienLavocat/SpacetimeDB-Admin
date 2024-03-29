@@ -3,6 +3,7 @@ import { LogsExplorerComponent } from './logs-explorer/logs-explorer.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SetDatabaseComponent } from './set-database/set-database.component';
 import { SqlComponent } from './sql/sql.component';
+import { SchemaComponent } from './schema/schema.component';
 
 export const routes: Routes = [
   {
@@ -33,5 +34,12 @@ export const routes: Routes = [
       title: 'SQL',
     },
     component: SqlComponent,
+  },
+  {
+    path: 'schema',
+    data: {
+      title: 'Schema',
+    },
+    component: SchemaComponent,
   },
 ];

@@ -1,0 +1,9 @@
+@if (schema$ | async; as schema) {
+  <mat-card class="container">
+    <ngx-monaco-editor
+      style="height: 100%"
+      [options]="editorOptions"
+      [ngModel]="schema"
+    ></ngx-monaco-editor>
+  </mat-card>
+}
