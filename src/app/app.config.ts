@@ -12,12 +12,15 @@ import { LogsState } from './logs-explorer/logs.state';
 import { SqlState } from './sql/sql.state';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import 'chartjs-adapter-date-fns';
 import { MetricsState } from './metrics/metrics.state';
+import 'chartjs-adapter-luxon';
+import * as luxon from 'luxon';
 
 export class AppConfig {
   apiUrl = 'http://localhost:3000';
 }
+
+luxon.Settings.defaultLocale = navigator.language;
 
 export const appConfig: ApplicationConfig = {
   providers: [

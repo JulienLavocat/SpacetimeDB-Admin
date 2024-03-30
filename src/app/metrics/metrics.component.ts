@@ -22,6 +22,12 @@ import {
 import { ChartConfiguration } from 'chart.js';
 import { AppState } from '../app.state';
 import { MatCardModule } from '@angular/material/card';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { SetRangeAction } from './metrics.actions';
+import { FormsModule } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 export type QueryOptions = ChartConfiguration['options'] & {
   plugins: Record<string, any>;
@@ -29,7 +35,15 @@ export type QueryOptions = ChartConfiguration['options'] & {
 @Component({
   selector: 'app-metrics',
   standalone: true,
-  imports: [CommonModule, BaseChartDirective, MatCardModule],
+  imports: [
+    CommonModule,
+    BaseChartDirective,
+    FormsModule,
+    MatCardModule,
+    MatToolbarModule,
+    MatSelectModule,
+    MatFormFieldModule,
+  ],
   templateUrl: './metrics.component.html',
   styleUrl: './metrics.component.scss',
 })
@@ -69,6 +83,24 @@ export class MetricsComponent {
     [this.makeDatasource(TX_CPU_TIME_MAX, 'Tx CPU Time MAX')],
   ];
   plugins = [ChartDatasourcePrometheusPlugin] as any;
+  ranges = [
+    { value: -1 * 60 * 1000, name: 'Last 1 min' },
+    { value: -5 * 60 * 1000, name: 'Last 5 min' },
+    { value: -15 * 60 * 1000, name: 'Last 15 min' },
+    { value: -30 * 60 * 1000, name: 'Last 30 min' },
+    { value: -1 * 3600 * 1000, name: 'Last 1h' },
+    { value: -3 * 3600 * 1000, name: 'Last 3h' },
+    { value: -6 * 3600 * 1000, name: 'Last 6h' },
+    { value: -12 * 3600 * 1000, name: 'Last 12h' },
+    { value: -24 * 3600 * 1000, name: 'Last 24h' },
+    { value: -72 * 3600 * 1000, name: 'Last 3d' },
+    { value: -168 * 3600 * 1000, name: 'Last 7d' },
+  ];
+  range$ = toSignal(this.store.select(MetricsState.range));
+
+  onRangeChange(range: number) {
+    this.store.dispatch(new SetRangeAction(range));
+  }
 
   private makeDatasource(
     query: string,
@@ -86,7 +118,17 @@ export class MetricsComponent {
       },
       responsive: true,
       maintainAspectRatio: true,
-      scales: { y: { beginAtZero: true } },
+      scales: {
+        y: { beginAtZero: true },
+        x: {
+          type: 'time',
+          adapters: {
+            date: {
+              locale: 'fr',
+            },
+          },
+        },
+      },
       plugins: {
         ...overrides.plugins,
         title: {
@@ -112,7 +154,7 @@ export class MetricsComponent {
           timeRange: {
             type: 'relative',
             msUpdateInterval: updateInterval,
-            start: start,
+            start,
             end: 0,
           },
           dataSetHook: (dataSets: any[]) => {

@@ -1,3 +1,13 @@
+<mat-toolbar>
+  <mat-form-field>
+    <mat-label>Range</mat-label>
+    <mat-select [(value)]="range$" (valueChange)="onRangeChange($event)">
+      @for (range of ranges; track range) {
+        <mat-option [value]="range.value">{{ range.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</mat-toolbar>
 <div class="container">
   <div class="row" *ngFor="let row of queries">
     <!-- This div is important in order to allow ChartJS to resize the charts-->
