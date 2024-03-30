@@ -115,8 +115,33 @@ export class MetricsComponent {
             start: start,
             end: 0,
           },
+          dataSetHook: (dataSets: any[]) => {
+            return dataSets.map((data) => ({
+              ...data,
+              label: this.formatLabel(data.label),
+            }));
+          },
         },
       },
     };
+  }
+
+  private formatLabel(label: string): string {
+    let hasDatabaseLabel = true;
+    const results = label
+      .substring(1, label.length - 1)
+      .split(',')
+      .map((e) =>
+        e
+          .replace(/db=".*"/, '')
+          .replaceAll('txn_type=', '')
+          .replaceAll('reducer=', '')
+          .replaceAll('"', ''),
+      )
+      .filter(Boolean);
+
+    if (hasDatabaseLabel && results.length === 0) return 'Value';
+
+    return results.join(' ');
   }
 }
