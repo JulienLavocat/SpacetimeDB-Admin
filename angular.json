@@ -29,6 +29,7 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
+              "src/_redirects",
               {
                 "glob": "**/*",
                 "input": "node_modules/monaco-editor",
@@ -46,8 +47,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "1500kb",
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "anyComponentStyle",
