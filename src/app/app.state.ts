@@ -46,6 +46,11 @@ export class AppState implements NgxsOnInit {
   }
 
   @Selector()
+  static databaseAddress(state: AppStateModel) {
+    return state.infos.address;
+  }
+
+  @Selector()
   static token(state: AppStateModel) {
     return state.token;
   }

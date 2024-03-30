@@ -1,17 +1,25 @@
 import { Routes } from '@angular/router';
 import { LogsExplorerComponent } from './logs-explorer/logs-explorer.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { SetDatabaseComponent } from './set-database/set-database.component';
 import { SqlComponent } from './sql/sql.component';
 import { SchemaComponent } from './schema/schema.component';
+import { MetricsComponent } from './metrics/metrics.component';
+import { resolveDatabaseAddress } from './metrics/metrics.resolver';
 
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    component: DashboardComponent,
+    redirectTo: 'metrics',
+  },
+  {
+    path: 'metrics',
+    component: MetricsComponent,
     data: {
-      title: 'Dashboard',
+      title: 'Metrics',
+    },
+    resolve: {
+      address: resolveDatabaseAddress,
     },
   },
   {

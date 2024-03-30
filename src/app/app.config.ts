@@ -11,6 +11,9 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { LogsState } from './logs-explorer/logs.state';
 import { SqlState } from './sql/sql.state';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import 'chartjs-adapter-date-fns';
+import { MetricsState } from './metrics/metrics.state';
 
 export class AppConfig {
   apiUrl = 'http://localhost:3000';
@@ -22,7 +25,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(),
     importProvidersFrom(
-      NgxsModule.forRoot([AppState, LogsState, SqlState], {
+      NgxsModule.forRoot([AppState, LogsState, SqlState, MetricsState], {
         developmentMode: true,
       }),
       NgxsReduxDevtoolsPluginModule.forRoot(),
@@ -30,5 +33,6 @@ export const appConfig: ApplicationConfig = {
     ),
     AppConfig,
     ApiService,
+    provideCharts(withDefaultRegisterables()),
   ],
 };
