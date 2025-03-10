@@ -1,10 +1,10 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { AppConfig } from './app.config';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, catchError, map } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { AppState } from './app.state';
+import { Observable, map } from 'rxjs';
 import { DatabaseSchema, LogLine, QueryResult } from './api.types';
+import { AppConfig } from './app.config';
+import { AppState } from './app.state';
 
 @Injectable()
 export class ApiService {
@@ -15,14 +15,14 @@ export class ApiService {
 
   getInfos() {
     return this.http.get<{ address: string; identity: string }>(
-      `${this.config.apiUrl}/database/info/${this.getDatabase()}`,
+      `${this.config.apiUrl}/database/${this.getDatabase()}/info`,
     );
   }
 
   getLogs(): Observable<LogLine[]> {
     return this.http
       .get(
-        `${this.config.apiUrl}/database/logs/${this.getDatabase()}?num_lines=300`,
+        `${this.config.apiUrl}/database/${this.getDatabase()}/logs?num_lines=300`,
         {
           headers: this.getAuthorizationHeader(),
           responseType: 'arraybuffer',
@@ -45,7 +45,7 @@ export class ApiService {
 
   getSchema(expand = true): Observable<DatabaseSchema> {
     return this.http.get<DatabaseSchema>(
-      `${this.config.apiUrl}/database/schema/${this.getDatabase()}?expand=${expand}`,
+      `${this.config.apiUrl}/database/${this.getDatabase()}/schema?expand=${expand}&version=9`,
       {
         headers: this.getAuthorizationHeader(),
       },
@@ -55,7 +55,7 @@ export class ApiService {
   runQuery(query: string): Observable<QueryResult> {
     return this.http
       .post<QueryResult[]>(
-        `${this.config.apiUrl}/database/sql/${this.getDatabase()}`,
+        `${this.config.apiUrl}/database/${this.getDatabase()}/sql`,
         query,
         {
           headers: this.getAuthorizationHeader(),
@@ -66,7 +66,7 @@ export class ApiService {
 
   getAuthorizationHeader() {
     return {
-      Authorization: `Basic ${btoa(`token:${this.store.selectSnapshot(AppState.token)}`)}`,
+      Authorization: `Bearer ${this.store.selectSnapshot(AppState.token)}`,
     };
   }
 

@@ -17,7 +17,7 @@ import 'chartjs-adapter-luxon';
 import * as luxon from 'luxon';
 
 export class AppConfig {
-  apiUrl = 'http://localhost:3000';
+  apiUrl = 'https://stdb.jlavocat.eu/v1';
 }
 
 luxon.Settings.defaultLocale = navigator.language;
