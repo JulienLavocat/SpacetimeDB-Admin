@@ -1,4 +1,8 @@
-import { ApplicationConfig, provideZoneChangeDetection } from "@angular/core";
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  provideZoneChangeDetection,
+} from "@angular/core";
 import { provideRouter } from "@angular/router";
 import { providePrimeNG } from "primeng/config";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
@@ -10,6 +14,7 @@ import { withNgxsLoggerPlugin } from "@ngxs/logger-plugin";
 import { provideStore } from "@ngxs/store";
 import { AppState } from "./app.state";
 import { provideApi } from "./api.service";
+import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,5 +32,6 @@ export const appConfig: ApplicationConfig = {
       withNgxsReduxDevtoolsPlugin(),
       withNgxsLoggerPlugin(),
     ),
+    importProvidersFrom([MonacoEditorModule.forRoot()]),
   ],
 };
