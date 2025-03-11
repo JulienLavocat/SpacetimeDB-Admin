@@ -1,15 +1,15 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { providePrimeNG } from 'primeng/config';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import Aura from '@primeng/themes/aura';
+import { ApplicationConfig, provideZoneChangeDetection } from "@angular/core";
+import { provideRouter } from "@angular/router";
+import { providePrimeNG } from "primeng/config";
+import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
+import Aura from "@primeng/themes/aura";
 
-import { routes } from './app.routes';
-import { withNgxsReduxDevtoolsPlugin } from '@ngxs/devtools-plugin';
-import { withNgxsLoggerPlugin } from '@ngxs/logger-plugin';
-import { provideStore } from '@ngxs/store';
-import { AppState } from './app.state';
-import { provideApi } from './api.service';
+import { routes } from "./app.routes";
+import { withNgxsReduxDevtoolsPlugin } from "@ngxs/devtools-plugin";
+import { withNgxsLoggerPlugin } from "@ngxs/logger-plugin";
+import { provideStore } from "@ngxs/store";
+import { AppState } from "./app.state";
+import { provideApi } from "./api.service";
 
 export const appConfig: ApplicationConfig = {
   providers: [

@@ -1,8 +1,8 @@
-import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
-import { SetDatabaseInfo } from './app.actions';
-import { Injectable } from '@angular/core';
+import { Action, NgxsOnInit, Selector, State, StateContext } from "@ngxs/store";
+import { SetDatabaseInfo } from "./app.actions";
+import { Injectable } from "@angular/core";
 
-const DB_DATA = 'stdb-db-data';
+const DB_DATA = "stdb-db-data";
 
 export interface AppStateModel {
   instanceUrl: string;
@@ -11,11 +11,11 @@ export interface AppStateModel {
 }
 
 @State<AppStateModel>({
-  name: 'app',
+  name: "app",
   defaults: {
-    instanceUrl: 'https://stdb.jlavocat.eu',
-    database: 'stellarwar',
-    token: 'test',
+    instanceUrl: "",
+    database: "",
+    token: "",
   },
 })
 @Injectable()
@@ -27,7 +27,6 @@ export class AppState implements NgxsOnInit {
 
   @Selector()
   static selectDbInfos(state: AppStateModel) {
-    console.log(state);
     return { url: state.instanceUrl, db: state.database };
   }
 

@@ -1,5 +1,5 @@
 export class SetDatabaseInfo {
-  static type = '[App] Set Database Info';
+  static type = "[App] Set Database Info";
 
   constructor(
     public instanceUrl: string,
