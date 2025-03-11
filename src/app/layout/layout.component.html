@@ -1,0 +1,8 @@
+<p-menubar [model]="startToolbar">
+  <ng-template #end>
+    <p-button icon="pi pi-cog" severity="secondary" routerLink="/settings" />
+  </ng-template>
+</p-menubar>
+<div class="mt-4">
+  <router-outlet />
+</div>

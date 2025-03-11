@@ -1,0 +1,50 @@
+<div class="mx-auto">
+  <p-card
+    class="mx-auto block max-w-lg text-center"
+    header="Connection settings"
+  >
+    <form
+      [formGroup]="form"
+      class="mt-2 flex flex-col gap-2"
+      (submit)="onSubmit()"
+    >
+      <p-floatlabel variant="on">
+        <input
+          id="instance-url-input"
+          class="w-full"
+          type="text"
+          pInputText
+          formControlName="instanceUrl"
+        />
+        <label for="instance-url-input">Instance URL</label>
+      </p-floatlabel>
+      <p-floatlabel variant="on">
+        <input
+          id="database-input"
+          class="w-full"
+          type="text"
+          pInputText
+          formControlName="database"
+        />
+        <label for="database-input">Database name</label>
+      </p-floatlabel>
+      <p-floatlabel variant="on">
+        <input
+          id="token-input"
+          class="w-full"
+          type="text"
+          pInputText
+          formControlName="token"
+        />
+        <label for="token-input">Token</label>
+      </p-floatlabel>
+      <p-button
+        label="Save"
+        icon="pi pi-save"
+        class="mt-2 self-end"
+        [disabled]="!form.valid"
+        type="submit"
+      />
+    </form>
+  </p-card>
+</div>
