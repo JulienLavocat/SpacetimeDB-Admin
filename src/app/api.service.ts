@@ -32,6 +32,11 @@ export function provideApi(): EnvironmentProviders {
   ]);
 }
 
+export interface SqlQueryResult {
+  rows: any[][];
+  schema: { elements: { name: { some: string }; algebraic_type: {} }[] };
+}
+
 @Injectable()
 export class ApiService {
   private store = inject(Store);
@@ -39,6 +44,18 @@ export class ApiService {
 
   ping() {
     return this.getDb("names");
+  }
+
+  runQuery(query: string) {
+    return this.postDb<SqlQueryResult[]>("sql", query);
+  }
+
+  private postDb<T>(url: string, body: any) {
+    const dbInfo = this.store.selectSnapshot(AppState.selectDbInfos);
+    return this.http.post<T>(
+      `${dbInfo.url}/v1/database/${dbInfo.db}/${url}`,
+      body,
+    );
   }
 
   private getDb(url: string) {
