@@ -37,17 +37,29 @@ export interface SqlQueryResult {
   schema: { elements: { name: { some: string }; algebraic_type: {} }[] };
 }
 
+export interface Reducer {
+  name: string;
+  lifecycle: { none?: {}[] };
+  params: { elements: {}[] };
+}
+
+export interface Schema {
+  tables: any[];
+  reducers: Reducer[];
+  types: any[];
+}
+
 @Injectable()
 export class ApiService {
   private store = inject(Store);
   private http = inject(HttpClient);
 
-  ping() {
-    return this.getDb("names");
-  }
-
   runQuery(query: string) {
     return this.postDb<SqlQueryResult[]>("sql", query);
+  }
+
+  getSchema() {
+    return this.getDb<Schema>("schema?version=9");
   }
 
   private postDb<T>(url: string, body: any) {
@@ -58,8 +70,8 @@ export class ApiService {
     );
   }
 
-  private getDb(url: string) {
+  private getDb<T>(url: string) {
     const dbInfo = this.store.selectSnapshot(AppState.selectDbInfos);
-    return this.http.get(`${dbInfo.url}/v1/database/${dbInfo.db}/${url}`);
+    return this.http.get<T>(`${dbInfo.url}/v1/database/${dbInfo.db}/${url}`);
   }
 }

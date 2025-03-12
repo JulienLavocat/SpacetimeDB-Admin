@@ -1,6 +1,7 @@
 import { Routes } from "@angular/router";
 import { provideStates } from "@ngxs/store";
 import { SqlState } from "./pages/sql/sql.state";
+import { SchemaState } from "./pages/schema/schema.state";
 
 export const routes: Routes = [
   {
@@ -20,6 +21,14 @@ export const routes: Routes = [
         providers: [provideStates([SqlState])],
         loadComponent: () =>
           import("./pages/sql/sql.component").then((m) => m.SqlComponent),
+      },
+      {
+        path: "schema",
+        providers: [provideStates([SchemaState])],
+        loadComponent: () =>
+          import("./pages/schema/schema.component").then(
+            (m) => m.SchemaComponent,
+          ),
       },
     ],
   },
