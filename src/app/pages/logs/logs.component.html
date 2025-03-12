@@ -1,0 +1,26 @@
+<p-card>
+  <p-inputgroup>
+    <p-inputgroup-addon>
+      <i class="pi pi-search"></i>
+    </p-inputgroup-addon>
+    <input
+      pInputText
+      [(ngModel)]="text1"
+      placeholder="Username"
+    /> </p-inputgroup
+></p-card>
+<p-card class="console flex grow">
+  @for (line of lines | reverseIterable; track $index) {
+    <div class="log-line" [ngClass]="line.level">
+      {{ line.ts.toISOString() }}
+      <span class="level" [ngClass]="line.level"
+        ><i class="mr-1" [ngClass]="getLevelIcon(line.level)"></i
+        >{{ line.level }}</span
+      >
+      <span class="ml-1.5 text-yellow-400">{{
+        printFilename(line.filename, line.line_number)
+      }}</span
+      >: {{ line.message }}
+    </div>
+  }
+</p-card>
