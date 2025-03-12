@@ -30,6 +30,11 @@ export const routes: Routes = [
             (m) => m.SchemaComponent,
           ),
       },
+      {
+        path: "logs",
+        loadComponent: () =>
+          import("./pages/logs/logs.component").then((m) => m.LogsComponent),
+      },
     ],
   },
 ];

@@ -1,0 +1,58 @@
+:host {
+  display: flex;
+  flex-grow: 1;
+}
+
+.console {
+  font-family:
+    Source Code Pro,
+    monospace;
+}
+
+.log-line {
+  &.error {
+    background-color: color-mix(in srgb, var(--color-red-500) 8%, transparent);
+  }
+
+  &.panic {
+    background-color: color-mix(in srgb, var(--color-red-500) 8%, transparent);
+  }
+
+  &.warn {
+    background-color: color-mix(
+      in srgb,
+      var(--color-yellow-300) 8%,
+      transparent
+    );
+  }
+
+  .level {
+    &.error {
+      color: var(--);
+    }
+
+    &.trace {
+      color: var(--color-gray-400);
+    }
+
+    &.debug {
+      color: var(--color-gray-400);
+    }
+
+    &.info {
+      color: var(--color-indigo-500);
+    }
+
+    &.warn {
+      color: var(--color-yellow-600);
+    }
+
+    &.error {
+      color: var(--color-red-500);
+    }
+
+    &.panic {
+      color: var(--color-red-500);
+    }
+  }
+}
