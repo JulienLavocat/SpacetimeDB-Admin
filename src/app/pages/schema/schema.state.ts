@@ -32,10 +32,13 @@ export class SchemaState {
 
   @Action(LoadSchema)
   loadSchema(ctx: StateContext<SchemaStateModel>) {
+    ctx.patchState({ isLoading: true });
+
     return this.api.getSchema().pipe(
       tap((data) =>
         ctx.patchState({
           schema: data,
+          isLoading: false,
         }),
       ),
     );
