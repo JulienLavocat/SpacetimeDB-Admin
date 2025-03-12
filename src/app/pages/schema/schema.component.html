@@ -1,0 +1,12 @@
+@if (isLoading$ | async) {
+  <p-progress-spinner></p-progress-spinner>
+}
+@if (!(isLoading$ | async) && (schema$ | async); as schema) {
+  <div class="w-full">
+    <ngx-monaco-editor
+      style="height: 100%"
+      [options]="editorOptions"
+      [ngModel]="schema"
+    />
+  </div>
+}

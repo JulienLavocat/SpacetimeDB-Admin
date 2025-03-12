@@ -32,6 +32,10 @@ export const appConfig: ApplicationConfig = {
       withNgxsReduxDevtoolsPlugin(),
       withNgxsLoggerPlugin(),
     ),
-    importProvidersFrom([MonacoEditorModule.forRoot()]),
+    importProvidersFrom([
+      MonacoEditorModule.forRoot({
+        baseUrl: window.location.origin + "/assets/monaco/min/vs",
+      }),
+    ]),
   ],
 };
