@@ -11,7 +11,7 @@ import {
   makeEnvironmentProviders,
 } from "@angular/core";
 import { Store } from "@ngxs/store";
-import { Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { AppState } from "./app.state";
 
 const addTokenInterceptor: HttpInterceptorFn = (req, next) => {
@@ -72,37 +72,41 @@ export class ApiService {
     return this.getDb<Schema>("schema?version=9");
   }
 
-  getLogs() {
+  getLogs(): [Observable<LogLine>, () => void] {
     const token = this.store.selectSnapshot(AppState.selectToken);
     const dbInfo = this.store.selectSnapshot(AppState.selectDbInfos);
     const url = `${dbInfo.url}/v1/database/${dbInfo.db}/logs?follow=true&num_lines=1000`;
     const subject = new Subject<LogLine>();
+    const cancellation = new AbortController();
+    const cancel = () => {
+      cancellation.abort();
+      subject.complete();
+    };
 
-    fetch(url, { headers: { Authorization: "Bearer " + token } }).then(
-      async (r) => {
-        console.log(r);
-        const reader = r.body?.getReader();
-        if (reader == null) return;
-        //FIXME: Use cancellation token
-        while (!subject.closed) {
-          const { value, done } = await reader.read();
-          if (done) subject.complete();
-          new TextDecoder()
-            .decode(value)
-            .split("\n")
-            .forEach((element) => {
-              if (element) {
-                const line = JSON.parse(element);
-                line.ts = new Date(line.ts / 1000);
-                line.level = line.level.toLowerCase();
-                subject.next(line);
-              }
-            });
-        }
-      },
-    );
+    fetch(url, {
+      headers: { Authorization: "Bearer " + token },
+      signal: cancellation.signal,
+    }).then(async (r) => {
+      const reader = r.body?.getReader();
+      if (reader == null) return;
+      while (!subject.closed) {
+        const { value, done } = await reader.read();
+        if (done) subject.complete();
+        new TextDecoder()
+          .decode(value)
+          .split("\n")
+          .forEach((element) => {
+            if (element) {
+              const line = JSON.parse(element);
+              line.ts = new Date(line.ts / 1000);
+              line.level = line.level.toLowerCase();
+              subject.next(line);
+            }
+          });
+      }
+    });
 
-    return subject.asObservable();
+    return [subject.asObservable(), cancel];
   }
 
   private postDb<T>(url: string, body: any) {

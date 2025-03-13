@@ -25,7 +25,7 @@
       </p-inputgroup>
     </div>
   </p-card>
-  <p-card styleClass="console flex grow w-full">
+  <p-card styleClass="flex grow w-full">
     @if (lines$ | async; as lines) {
       @for (line of lines; track $index) {
         <div class="log-line" [ngClass]="line.level">

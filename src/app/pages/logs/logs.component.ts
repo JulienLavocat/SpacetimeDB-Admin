@@ -1,6 +1,5 @@
 import { AsyncPipe, NgClass } from "@angular/common";
-import { Component, DestroyRef, inject, OnInit } from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Store } from "@ngxs/store";
 import { PrimeIcons } from "primeng/api";
@@ -14,6 +13,7 @@ import { tap } from "rxjs";
 import { ApiService } from "../../api.service";
 import {
   AppendLogLine,
+  ClearLogs,
   LogsState,
   SetLogsFilter,
   SetSelectedLogLevels,
@@ -44,23 +44,28 @@ const levelsIcons: Record<string, string> = {
   templateUrl: "./logs.component.html",
   styleUrl: "./logs.component.css",
 })
-export class LogsComponent implements OnInit {
+export class LogsComponent implements OnInit, OnDestroy {
   private readonly api = inject(ApiService);
-  private readonly destroyRef = inject(DestroyRef);
   private readonly store = inject(Store);
 
   lines$ = this.store.select(LogsState.selectLines);
   levelsOptions = ["trace", "debug", "info", "warn", "error", "panic"];
   selectedLevels = this.levelsOptions;
+  cancelSubscribption?: () => void;
 
   ngOnInit() {
-    this.api
-      .getLogs()
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        tap((line) => this.store.dispatch(new AppendLogLine(line))),
-      )
+    console.log("init");
+    const [events$, cancelSubscribption] = this.api.getLogs();
+    this.cancelSubscribption = cancelSubscribption;
+    events$
+      .pipe(tap((line) => this.store.dispatch(new AppendLogLine(line))))
       .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.store.dispatch(new ClearLogs());
+    console.log("destroy");
+    if (this.cancelSubscribption) this.cancelSubscribption();
   }
 
   getLevelIcon(level: string) {
