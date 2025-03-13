@@ -1,6 +1,7 @@
 @import "primeicons/primeicons.css";
 @import "tailwindcss";
 @import "tailwindcss-primeui";
+@source "app/pages/logs/logs.component.css";
 
 html {
   font-family:
