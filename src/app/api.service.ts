@@ -80,6 +80,7 @@ export class ApiService {
 
     fetch(url, { headers: { Authorization: "Bearer " + token } }).then(
       async (r) => {
+        console.log(r);
         const reader = r.body?.getReader();
         if (reader == null) return;
         //FIXME: Use cancellation token
