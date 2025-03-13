@@ -3,7 +3,7 @@ import { Component, DestroyRef, inject, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { Store } from "@ngxs/store";
-import { FilterService, PrimeIcons } from "primeng/api";
+import { PrimeIcons } from "primeng/api";
 import { CardModule } from "primeng/card";
 import { InputGroupModule } from "primeng/inputgroup";
 import { InputGroupAddonModule } from "primeng/inputgroupaddon";
@@ -42,7 +42,7 @@ const levelsIcons: Record<string, string> = {
     AsyncPipe,
   ],
   templateUrl: "./logs.component.html",
-  styleUrl: "./logs.component.scss",
+  styleUrl: "./logs.component.css",
 })
 export class LogsComponent implements OnInit {
   private readonly api = inject(ApiService);
