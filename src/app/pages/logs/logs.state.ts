@@ -1,8 +1,7 @@
+import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
+import { insertItem, patch } from "@ngxs/store/operators";
 import { LogLine } from "../../api.service";
-import { append, insertItem, patch } from "@ngxs/store/operators";
-import { inject, Injectable } from "@angular/core";
-import { FilterService } from "primeng/api";
 
 export class AppendLogLine {
   static type = "[Logs] Append Line";
@@ -17,6 +16,10 @@ export class SetSelectedLogLevels {
 export class SetLogsFilter {
   static type = "[Logs] Set Logs Filter";
   constructor(public filter: string) {}
+}
+
+export class ClearLogs {
+  static type = "[Logs] Clear logs";
 }
 
 export interface LogsStateModel {
@@ -65,5 +68,10 @@ export class LogsState {
   @Action(SetLogsFilter)
   setLogsFilter(ctx: StateContext<LogsStateModel>, action: SetLogsFilter) {
     ctx.patchState({ filter: action.filter });
+  }
+
+  @Action(ClearLogs)
+  clearLogs(ctx: StateContext<LogsStateModel>) {
+    ctx.patchState({ lines: [] });
   }
 }
