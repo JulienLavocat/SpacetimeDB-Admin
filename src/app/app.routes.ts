@@ -2,6 +2,7 @@ import { Routes } from "@angular/router";
 import { provideStates } from "@ngxs/store";
 import { SqlState } from "./pages/sql/sql.state";
 import { SchemaState } from "./pages/schema/schema.state";
+import { LogsState } from "./pages/logs/logs.state";
 
 export const routes: Routes = [
   {
@@ -32,6 +33,7 @@ export const routes: Routes = [
       },
       {
         path: "logs",
+        providers: [provideStates([LogsState])],
         loadComponent: () =>
           import("./pages/logs/logs.component").then((m) => m.LogsComponent),
       },

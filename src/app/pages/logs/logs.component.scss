@@ -56,3 +56,9 @@
     }
   }
 }
+
+::ng-deep {
+  .p-multiselect-list-container {
+    max-height: 20rem !important;
+  }
+}

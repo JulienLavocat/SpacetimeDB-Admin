@@ -1,26 +1,45 @@
-<p-card>
-  <p-inputgroup>
-    <p-inputgroup-addon>
-      <i class="pi pi-search"></i>
-    </p-inputgroup-addon>
-    <input
-      pInputText
-      [(ngModel)]="text1"
-      placeholder="Username"
-    /> </p-inputgroup
-></p-card>
-<p-card class="console flex grow">
-  @for (line of lines | reverseIterable; track $index) {
-    <div class="log-line" [ngClass]="line.level">
-      {{ line.ts.toISOString() }}
-      <span class="level" [ngClass]="line.level"
-        ><i class="mr-1" [ngClass]="getLevelIcon(line.level)"></i
-        >{{ line.level }}</span
-      >
-      <span class="ml-1.5 text-yellow-400">{{
-        printFilename(line.filename, line.line_number)
-      }}</span
-      >: {{ line.message }}
+<div class="flex flex-col gap-4 grow">
+  <p-card>
+    <div class="flex gap-3">
+      <p-inputgroup class="!w-1/3">
+        <p-inputgroup-addon>
+          <i class="pi pi-gauge"></i>
+        </p-inputgroup-addon>
+        <p-multiselect
+          [filter]="false"
+          [options]="levelsOptions"
+          placeholder="Filter level"
+          [(ngModel)]="selectedLevels"
+          (onChange)="filterLogLevels()"
+        />
+      </p-inputgroup>
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="pi pi-search"></i>
+        </p-inputgroup-addon>
+        <input
+          pInputText
+          placeholder="Filter logs"
+          (input)="filterLogs($event)"
+        />
+      </p-inputgroup>
     </div>
-  }
-</p-card>
+  </p-card>
+  <p-card styleClass="console flex grow w-full">
+    @if (lines$ | async; as lines) {
+      @for (line of lines; track $index) {
+        <div class="log-line" [ngClass]="line.level">
+          {{ line.ts.toISOString() }}
+          <span class="level" [ngClass]="line.level"
+            ><i class="mr-1" [ngClass]="getLevelIcon(line.level)"></i
+            >{{ line.level }}</span
+          >
+          <span class="ml-1.5 text-yellow-400">{{
+            printFilename(line.filename, line.line_number)
+          }}</span
+          >: {{ line.message }}
+        </div>
+      }
+    }
+  </p-card>
+</div>
