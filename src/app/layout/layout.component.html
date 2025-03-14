@@ -1,8 +1,15 @@
 <p-menubar [model]="startToolbar">
   <ng-template #end>
-    <p-button icon="pi pi-cog" severity="secondary" routerLink="/settings" />
+    <p-button
+      icon="pi pi-cog"
+      severity="secondary"
+      routerLink="/settings"
+      routerLinkActive="p-menubar-item-link-active"
+    />
   </ng-template>
 </p-menubar>
-<div class="mt-4 h-[calc(100vh-60px-3rem)] flex">
+<div
+  class="mt-4 h-(--page-container-height) max-h-(--page-container-height) flex"
+>
   <router-outlet />
 </div>

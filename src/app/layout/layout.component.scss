@@ -1,0 +1,10 @@
+::ng-deep {
+  .p-menubar-item-link-active {
+    background-color: color-mix(
+      in srgb,
+      var(--p-highlight-color) 15%,
+      transparent
+    );
+    border-radius: 5px;
+  }
+}

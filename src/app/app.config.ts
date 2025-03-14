@@ -13,8 +13,8 @@ import { withNgxsReduxDevtoolsPlugin } from "@ngxs/devtools-plugin";
 import { withNgxsLoggerPlugin } from "@ngxs/logger-plugin";
 import { provideStore } from "@ngxs/store";
 import { AppState } from "./app.state";
-import { provideApi } from "./api.service";
 import { MonacoEditorModule } from "ngx-monaco-editor-v2";
+import { provideApi } from "./api/api.provider";
 
 export const appConfig: ApplicationConfig = {
   providers: [
