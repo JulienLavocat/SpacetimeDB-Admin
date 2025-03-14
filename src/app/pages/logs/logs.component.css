@@ -1,6 +1,11 @@
 :host {
   display: flex;
   flex-grow: 1;
+  max-height: var(--page-container-height);
+}
+
+.console {
+  overflow: clip;
 }
 
 .log-line {

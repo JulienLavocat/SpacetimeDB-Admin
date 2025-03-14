@@ -25,11 +25,13 @@
       </p-inputgroup>
     </div>
   </p-card>
-  <p-card styleClass="flex grow w-full">
+  <p-card
+    styleClass="flex grow w-full h-(--logs-container-height) overflow-scroll"
+  >
     @if (lines$ | async; as lines) {
       @for (line of lines; track $index) {
         <div class="log-line" [ngClass]="line.level">
-          {{ line.ts.toISOString() }}
+          <span class="text-neutral-400 mr-2">{{ line.ts.toISOString() }}</span>
           <span class="level" [ngClass]="line.level"
             ><i class="mr-1" [ngClass]="getLevelIcon(line.level)"></i
             >{{ line.level }}</span
@@ -39,6 +41,8 @@
           }}</span
           >: {{ line.message }}
         </div>
+      } @empty {
+        <p class="text-center">No logs found.</p>
       }
     }
   </p-card>

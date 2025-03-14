@@ -1,8 +1,9 @@
 import { inject, Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { catchError, tap, throwError } from "rxjs";
-import { ApiService, SqlQueryResult } from "../../api.service";
+import { ApiService } from "../../api/api.service";
 import { RunSqlQuery } from "./sql.actions";
+import { SqlQueryResult } from "../../api/types";
 
 export interface SqlStateModel {
   rowsCount: number;

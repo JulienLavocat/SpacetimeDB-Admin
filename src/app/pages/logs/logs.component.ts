@@ -9,8 +9,8 @@ import { InputGroupAddonModule } from "primeng/inputgroupaddon";
 import { InputTextModule } from "primeng/inputtext";
 import { MultiSelectModule } from "primeng/multiselect";
 import { ScrollerModule } from "primeng/scroller";
-import { tap } from "rxjs";
-import { ApiService } from "../../api.service";
+import { repeat, tap } from "rxjs";
+import { ApiService } from "../../api/api.service";
 import {
   AppendLogLine,
   ClearLogs,
@@ -54,17 +54,18 @@ export class LogsComponent implements OnInit, OnDestroy {
   cancelSubscribption?: () => void;
 
   ngOnInit() {
-    console.log("init");
     const [events$, cancelSubscribption] = this.api.getLogs();
     this.cancelSubscribption = cancelSubscribption;
     events$
-      .pipe(tap((line) => this.store.dispatch(new AppendLogLine(line))))
+      .pipe(
+        repeat({ delay: 10 }),
+        tap((line) => this.store.dispatch(new AppendLogLine(line))),
+      )
       .subscribe();
   }
 
   ngOnDestroy(): void {
     this.store.dispatch(new ClearLogs());
-    console.log("destroy");
     if (this.cancelSubscribption) this.cancelSubscribption();
   }
 

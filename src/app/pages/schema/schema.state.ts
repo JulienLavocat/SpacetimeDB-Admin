@@ -1,8 +1,9 @@
 import { inject, Injectable } from "@angular/core";
 import { Action, State, StateContext, Selector } from "@ngxs/store";
 import { tap } from "rxjs";
-import { ApiService, Schema } from "../../api.service";
+import { ApiService } from "../../api/api.service";
 import { LoadSchema } from "./schema.actions";
+import { Schema } from "../../api/types";
 
 export interface SchemaStateModel {
   isLoading: boolean;

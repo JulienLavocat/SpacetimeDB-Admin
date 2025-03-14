@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
-import { insertItem, patch } from "@ngxs/store/operators";
-import { LogLine } from "../../api.service";
+import { append, insertItem, patch } from "@ngxs/store/operators";
+import { LogLine } from "../../api/types";
 
 export class AppendLogLine {
-  static type = "[Logs] Append Line";
-  constructor(public line: LogLine) {}
+  static type = "[Logs] Append Lines";
+  constructor(public line: LogLine[]) {}
 }
 
 export class SetSelectedLogLevels {
@@ -54,7 +54,7 @@ export class LogsState {
 
   @Action(AppendLogLine)
   appendLogLine(ctx: StateContext<LogsStateModel>, action: AppendLogLine) {
-    ctx.setState(patch({ lines: insertItem(action.line) }));
+    ctx.setState(patch({ lines: append(action.line) }));
   }
 
   @Action(SetSelectedLogLevels)
