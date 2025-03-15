@@ -29,7 +29,7 @@
     styleClass="flex grow w-full h-(--logs-container-height) overflow-scroll"
   >
     @if (lines$ | async; as lines) {
-      @for (line of lines; track $index) {
+      @for (line of lines | reverseIterable; track $index) {
         <div class="log-line" [ngClass]="line.level">
           <span class="text-neutral-400 mr-2">{{ line.ts.toISOString() }}</span>
           <span class="level" [ngClass]="line.level"

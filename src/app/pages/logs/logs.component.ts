@@ -18,6 +18,7 @@ import {
   SetLogsFilter,
   SetSelectedLogLevels,
 } from "./logs.state";
+import { ReverseIterablePipe } from "../../utils/reverse-iterable.pipe";
 
 const levelsIcons: Record<string, string> = {
   trace: PrimeIcons.INFO_CIRCLE,
@@ -40,6 +41,7 @@ const levelsIcons: Record<string, string> = {
     FormsModule,
     MultiSelectModule,
     AsyncPipe,
+    ReverseIterablePipe,
   ],
   templateUrl: "./logs.component.html",
   styleUrl: "./logs.component.css",
