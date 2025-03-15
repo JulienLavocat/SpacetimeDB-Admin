@@ -55,6 +55,11 @@ export class AppState implements NgxsOnInit {
     return { url: state.instanceUrl, db: state.database };
   }
 
+  @Selector()
+  static selectHasCredentialsSet(state: AppStateModel) {
+    return !!state.instanceUrl && !!state.token && !!state.database;
+  }
+
   ngxsOnInit(ctx: StateContext<any>): void {
     const data = localStorage.getItem(DB_DATA);
     if (data) {
