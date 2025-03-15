@@ -3,15 +3,47 @@ export interface SqlQueryResult {
   schema: { elements: { name: { some: string }; algebraic_type: {} }[] };
 }
 
-export interface Reducer {
-  name: string;
-  lifecycle: { none?: {}[] };
-  params: { elements: {}[] };
+export type StdbTypes =
+  | "I8"
+  | "U8"
+  | "I16"
+  | "U16"
+  | "I32"
+  | "U32"
+  | "I64"
+  | "U64"
+  | "I128"
+  | "U128"
+  | "F32"
+  | "F64"
+  | "Bool"
+  | "String"
+  | "Array";
+
+export type AlgebraicType = Record<StdbTypes, never[]> & {
+  Array: Record<StdbTypes, never[]>;
+};
+
+export interface RustOption<T> {
+  some?: T;
+  none?: void;
 }
 
-export interface Schema {
+export interface RawReducer {
+  name: string;
+  lifecycle: RustOption<{
+    OnDisconnect?: never[];
+    Init?: never[];
+    OnConnect?: never[];
+  }>;
+  params: {
+    elements: { name: RustOption<string>; algebraic_type: AlgebraicType }[];
+  };
+}
+
+export interface RawSchema {
   tables: any[];
-  reducers: Reducer[];
+  reducers: RawReducer[];
   types: any[];
 }
 
@@ -22,4 +54,9 @@ export interface LogLine {
   filename: string;
   line_number: number;
   message: string;
+}
+
+export interface ReducerCallResult {
+  error?: string;
+  data?: any;
 }

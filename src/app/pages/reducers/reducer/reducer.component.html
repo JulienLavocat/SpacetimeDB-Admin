@@ -1,0 +1,30 @@
+<p-card styleClass="flex">
+  <div class="flex justify-between items-center">
+    <div class="flex items-center gap-2">
+      <p class="flex">
+        {{ reducer.name }}
+        <span>(</span>
+        @for (param of reducer.params; track $index) {
+          <app-reducer-param
+            [type]="param.type"
+            [name]="param.name"
+            [subType]="param.subType"
+            [last]="$last"
+          />
+        }
+        <span>)</span>
+      </p>
+    </div>
+    @if (reducer.lifecycle) {
+      <p-chip [label]="reducer.lifecycle" />
+    } @else {
+      <p-button
+        [loading]="isLoading"
+        [disabled]="reducer.params.length > 0"
+        icon="pi pi-play"
+        variant="outlined"
+        (click)="call()"
+      />
+    }
+  </div>
+</p-card>
