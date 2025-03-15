@@ -4,10 +4,12 @@ An admin dashboard for SpacetimeDB.
 
 ## TODO List
 
-- [] Metrics are not yet implemented, I need to make a grafana Dashboard and integrate it
-- [] I can't call reducers with parameters yet (button is disabled if more than 0 arguments)
-- [] [LOGS] better general search (for now it's a just a basic "the message contains the searched string")
+- [] Metrics are not yet implemented
+- [] Call reducers with parameters (button is disabled if more than 0 arguments)
 - [] Custom types are not yet supported for reducer call
+- [] Table live view
+- [] Preview mode for all the tables with limited row numbers
+- [] Improved logs general search (for now it's a just a basic "the message contains the searched string")
 
 ## Development server
 
