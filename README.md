@@ -1,6 +1,13 @@
 # StdbAdmin
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.1.
+An admin dashboard for SpacetimeDB.
+
+## TODO List
+
+- [] Metrics are not yet implemented, I need to make a grafana Dashboard and integrate it
+- [] I can't call reducers with parameters yet (button is disabled if more than 0 arguments)
+- [] [LOGS] better general search (for now it's a just a basic "the message contains the searched string")
+- [] Custom types are not yet supported for reducer call
 
 ## Development server
 

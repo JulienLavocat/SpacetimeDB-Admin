@@ -15,6 +15,7 @@ import {
   AppendLogLine,
   ClearLogs,
   LogsState,
+  SetFilesFilter,
   SetLogsFilter,
   SetSelectedLogLevels,
 } from "./logs.state";
@@ -85,6 +86,12 @@ export class LogsComponent implements OnInit, OnDestroy {
     const target = event.target as any;
     const value = target?.value;
     this.store.dispatch(new SetLogsFilter(value));
+  }
+
+  filterFiles(event: Event) {
+    const target = event.target as any;
+    const value = target?.value;
+    this.store.dispatch(new SetFilesFilter(value));
   }
 
   filterLogLevels() {

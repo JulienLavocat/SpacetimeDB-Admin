@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
-import { append, insertItem, patch } from "@ngxs/store/operators";
+import { append, patch } from "@ngxs/store/operators";
+import { EMPTY } from "rxjs";
 import { LogLine } from "../../api/types";
 
 export class AppendLogLine {
@@ -18,6 +19,11 @@ export class SetLogsFilter {
   constructor(public filter: string) {}
 }
 
+export class SetFilesFilter {
+  static type = "[Logs] Set Files filter";
+  constructor(public filter: string) {}
+}
+
 export class ClearLogs {
   static type = "[Logs] Clear logs";
 }
@@ -26,6 +32,7 @@ export interface LogsStateModel {
   lines: LogLine[];
   selectedLogLevels: Set<string>;
   filter: string;
+  filesFilter: string;
 }
 
 @State<LogsStateModel>({
@@ -41,6 +48,7 @@ export interface LogsStateModel {
       "panic",
     ]),
     filter: "",
+    filesFilter: "",
   },
 })
 @Injectable()
@@ -49,12 +57,17 @@ export class LogsState {
   static selectLines(state: LogsStateModel) {
     return state.lines
       .filter((l) => state.selectedLogLevels.has(l.level))
-      .filter((l) => l.message.includes(state.filter));
+      .filter(
+        (l) =>
+          l.message.includes(state.filter) &&
+          l.filename.includes(state.filesFilter),
+      );
   }
 
   @Action(AppendLogLine)
   appendLogLine(ctx: StateContext<LogsStateModel>, action: AppendLogLine) {
     ctx.setState(patch({ lines: append(action.line) }));
+    return EMPTY;
   }
 
   @Action(SetSelectedLogLevels)
@@ -63,15 +76,24 @@ export class LogsState {
     action: SetSelectedLogLevels,
   ) {
     ctx.patchState({ selectedLogLevels: new Set(action.selectedLevels) });
+    return EMPTY;
   }
 
   @Action(SetLogsFilter)
   setLogsFilter(ctx: StateContext<LogsStateModel>, action: SetLogsFilter) {
     ctx.patchState({ filter: action.filter });
+    return EMPTY;
+  }
+
+  @Action(SetFilesFilter)
+  setFilesFilter(ctx: StateContext<LogsStateModel>, action: SetFilesFilter) {
+    ctx.patchState({ filesFilter: action.filter });
+    return EMPTY;
   }
 
   @Action(ClearLogs)
   clearLogs(ctx: StateContext<LogsStateModel>) {
     ctx.patchState({ lines: [] });
+    return EMPTY;
   }
 }

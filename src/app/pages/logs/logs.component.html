@@ -1,7 +1,7 @@
 <div class="flex flex-col gap-4 grow">
   <p-card>
     <div class="flex gap-3">
-      <p-inputgroup class="!w-1/3">
+      <p-inputgroup class="!w-1/5">
         <p-inputgroup-addon>
           <i class="pi pi-gauge"></i>
         </p-inputgroup-addon>
@@ -11,6 +11,16 @@
           placeholder="Filter level"
           [(ngModel)]="selectedLevels"
           (onChange)="filterLogLevels()"
+        />
+      </p-inputgroup>
+      <p-inputgroup styleClass="!w-1/4">
+        <p-inputgroup-addon>
+          <i class="pi pi-file"></i>
+        </p-inputgroup-addon>
+        <input
+          pInputText
+          placeholder="Filter file"
+          (input)="filterFiles($event)"
         />
       </p-inputgroup>
       <p-inputgroup>
