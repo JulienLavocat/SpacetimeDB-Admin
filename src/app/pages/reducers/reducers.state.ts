@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
-import { tap } from "rxjs";
+import { EMPTY, tap } from "rxjs";
 import { Reducer } from "../../api";
 import { ApiService } from "../../api/api.service";
 
@@ -16,15 +16,22 @@ export class CallReducerAction {
   ) {}
 }
 
+export class FilterReducersAction {
+  static type = "[Reducers] Filter Reducers";
+  constructor(public filter: string) {}
+}
+
 export interface ReducersStateModel {
   isLoading: boolean;
   reducers: Reducer[];
+  filter: string;
 }
 
 @State<ReducersStateModel>({
   name: "reducers",
   defaults: {
     isLoading: false,
+    filter: "",
     reducers: [],
   },
 })
@@ -34,7 +41,10 @@ export class ReducersState {
 
   @Selector()
   static selectData(state: ReducersStateModel) {
-    return { reducers: state.reducers, isLoading: state.isLoading };
+    return {
+      reducers: state.reducers.filter((e) => e.name.includes(state.filter)),
+      isLoading: state.isLoading,
+    };
   }
 
   @Action(LoadReducersAction)
@@ -50,8 +60,18 @@ export class ReducersState {
               (a.lifecycle ?? "").localeCompare(b.lifecycle ?? ""),
             ),
           isLoading: false,
+          filter: "",
         }),
       ),
     );
+  }
+
+  @Action(FilterReducersAction)
+  filterReducers(
+    ctx: StateContext<ReducersStateModel>,
+    action: FilterReducersAction,
+  ) {
+    ctx.patchState({ filter: action.filter });
+    return EMPTY;
   }
 }

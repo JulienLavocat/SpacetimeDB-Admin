@@ -5,7 +5,14 @@ import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { ProgressSpinnerModule } from "primeng/progressspinner";
 import { ReducerComponent } from "./reducer/reducer.component";
-import { LoadReducersAction, ReducersState } from "./reducers.state";
+import {
+  FilterReducersAction,
+  LoadReducersAction,
+  ReducersState,
+} from "./reducers.state";
+import { InputGroupModule } from "primeng/inputgroup";
+import { InputTextModule } from "primeng/inputtext";
+import { InputGroupAddonModule } from "primeng/inputgroupaddon";
 
 @Component({
   selector: "app-reducers",
@@ -15,6 +22,9 @@ import { LoadReducersAction, ReducersState } from "./reducers.state";
     CardModule,
     ButtonModule,
     ReducerComponent,
+    InputGroupModule,
+    InputGroupAddonModule,
+    InputTextModule,
   ],
   templateUrl: "./reducers.component.html",
   styleUrl: "./reducers.component.scss",
@@ -26,5 +36,11 @@ export class ReducersComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(new LoadReducersAction());
+  }
+
+  filter(event: Event) {
+    const target = event.target as any;
+    const value = target?.value;
+    this.store.dispatch(new FilterReducersAction(value));
   }
 }

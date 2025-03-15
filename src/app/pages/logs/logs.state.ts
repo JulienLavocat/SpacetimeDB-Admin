@@ -35,18 +35,20 @@ export interface LogsStateModel {
   filesFilter: string;
 }
 
+const DEFAULT_SELECTED_LEVELS = new Set([
+  "trace",
+  "debug",
+  "info",
+  "warn",
+  "error",
+  "panic",
+]);
+
 @State<LogsStateModel>({
   name: "logs",
   defaults: {
     lines: [],
-    selectedLogLevels: new Set([
-      "trace",
-      "debug",
-      "info",
-      "warn",
-      "error",
-      "panic",
-    ]),
+    selectedLogLevels: DEFAULT_SELECTED_LEVELS,
     filter: "",
     filesFilter: "",
   },
@@ -93,7 +95,12 @@ export class LogsState {
 
   @Action(ClearLogs)
   clearLogs(ctx: StateContext<LogsStateModel>) {
-    ctx.patchState({ lines: [] });
+    ctx.patchState({
+      lines: [],
+      filter: "",
+      filesFilter: "",
+      selectedLogLevels: DEFAULT_SELECTED_LEVELS,
+    });
     return EMPTY;
   }
 }
