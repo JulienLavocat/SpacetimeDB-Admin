@@ -1,13 +1,18 @@
+import { AsyncPipe } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { ButtonModule } from "primeng/button";
-import { InputTextModule } from "primeng/inputtext";
-import { FloatLabelModule } from "primeng/floatlabel";
-import { CardModule } from "primeng/card";
 import { Store } from "@ngxs/store";
-import { SetDatabaseInfo, TestDatabaseConnectionAction } from "../../app.state";
 import { MessageService } from "primeng/api";
+import { ButtonModule } from "primeng/button";
+import { CardModule } from "primeng/card";
+import { FloatLabelModule } from "primeng/floatlabel";
+import { InputTextModule } from "primeng/inputtext";
 import { take, tap } from "rxjs";
+import {
+  AppState,
+  SetDatabaseInfo,
+  TestDatabaseConnectionAction,
+} from "../../app.state";
 
 @Component({
   selector: "app-settings",
@@ -17,19 +22,31 @@ import { take, tap } from "rxjs";
     ButtonModule,
     FloatLabelModule,
     CardModule,
+    AsyncPipe,
   ],
   templateUrl: "./settings.component.html",
   styleUrl: "./settings.component.scss",
 })
 export class SettingsComponent {
-  form = inject(FormBuilder).group({
+  private readonly fb = inject(FormBuilder);
+  private readonly store = inject(Store);
+  private readonly toast = inject(MessageService);
+
+  form = this.fb.group({
     token: ["", Validators.required],
     instanceUrl: ["", Validators.required],
     database: ["", Validators.required],
   });
 
-  private readonly store = inject(Store);
-  private readonly toast = inject(MessageService);
+  form$ = this.store.select(AppState.selectDbInfos).pipe(
+    tap((dbInfos) => {
+      this.form.patchValue({
+        token: dbInfos.token,
+        instanceUrl: dbInfos.url,
+        database: dbInfos.db,
+      });
+    }),
+  );
 
   onSubmit() {
     console.log(this.form.valid);

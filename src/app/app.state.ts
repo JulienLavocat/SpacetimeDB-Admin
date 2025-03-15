@@ -52,7 +52,7 @@ export class AppState implements NgxsOnInit {
 
   @Selector()
   static selectDbInfos(state: AppStateModel) {
-    return { url: state.instanceUrl, db: state.database };
+    return { url: state.instanceUrl, db: state.database, token: state.token };
   }
 
   @Selector()
