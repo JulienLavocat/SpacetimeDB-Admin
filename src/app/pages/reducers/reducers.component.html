@@ -1,0 +1,11 @@
+@if (data$ | async; as data) {
+  @if (data.isLoading) {
+    <p-progress-spinner></p-progress-spinner>
+  } @else {
+    <div class="grow flex flex-col gap-2">
+      @for (reducer of data.reducers; track $index) {
+        <app-reducer [reducer]="reducer" />
+      }
+    </div>
+  }
+}

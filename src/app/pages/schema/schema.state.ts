@@ -1,13 +1,13 @@
 import { inject, Injectable } from "@angular/core";
-import { Action, State, StateContext, Selector } from "@ngxs/store";
+import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { tap } from "rxjs";
+import { RawSchema } from "../../api";
 import { ApiService } from "../../api/api.service";
 import { LoadSchema } from "./schema.actions";
-import { Schema } from "../../api/types";
 
 export interface SchemaStateModel {
   isLoading: boolean;
-  schema: Schema | null;
+  schema: RawSchema | null;
 }
 
 @State<SchemaStateModel>({
@@ -35,7 +35,7 @@ export class SchemaState {
   loadSchema(ctx: StateContext<SchemaStateModel>) {
     ctx.patchState({ isLoading: true });
 
-    return this.api.getSchema().pipe(
+    return this.api.getRawSchema().pipe(
       tap((data) =>
         ctx.patchState({
           schema: data,

@@ -1,10 +1,11 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Store } from "@ngxs/store";
-import { Observable } from "rxjs";
+import { catchError, map, Observable, of } from "rxjs";
 import { AppState } from "../app.state";
 import { streamLogs } from "./logs-fetcher";
-import { LogLine, Schema, SqlQueryResult } from "./types";
+import { LogLine, RawSchema, ReducerCallResult, SqlQueryResult } from "./types";
+import { parseSchema } from "./parse-schema";
 
 @Injectable()
 export class ApiService {
@@ -15,8 +16,28 @@ export class ApiService {
     return this.postDb<SqlQueryResult[]>("sql", query);
   }
 
+  getRawSchema() {
+    return this.getDb<RawSchema>("schema?version=9");
+  }
+
   getSchema() {
-    return this.getDb<Schema>("schema?version=9");
+    return this.getDb<RawSchema>("schema?version=9").pipe(
+      map((schema) => parseSchema(schema)),
+    );
+  }
+
+  callReducer(name: string, args: any[] = []) {
+    return this.postDb(`call/${name}`, args).pipe(
+      map((res) => {
+        const result: ReducerCallResult = { error: undefined, data: res };
+        console.log(res);
+        return result;
+      }),
+      catchError((err) => {
+        const res: ReducerCallResult = { error: err.error, data: undefined };
+        return of(res);
+      }),
+    );
   }
 
   getLogs(): [Observable<LogLine[]>, () => void] {

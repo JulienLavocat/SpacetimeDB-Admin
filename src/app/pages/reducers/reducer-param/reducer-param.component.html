@@ -1,0 +1,11 @@
+<div [ngClass]="{ 'mr-1': !last }">
+  @if (type !== "Array") {
+    <span>{{ name }}: {{ type | lowercase }}</span>
+  }
+  @if (type === "Array") {
+    <span>{{ name }}: {{ subType | lowercase }}[]</span>
+  }
+  @if (!last) {
+    <span>,</span>
+  }
+</div>

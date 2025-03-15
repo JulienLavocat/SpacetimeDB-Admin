@@ -15,6 +15,7 @@ import { provideStore } from "@ngxs/store";
 import { AppState } from "./app.state";
 import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { provideApi } from "./api/api.provider";
+import { MessageService } from "primeng/api";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -37,5 +38,6 @@ export const appConfig: ApplicationConfig = {
         baseUrl: window.location.origin + "/assets/monaco/min/vs",
       }),
     ]),
+    MessageService,
   ],
 };
