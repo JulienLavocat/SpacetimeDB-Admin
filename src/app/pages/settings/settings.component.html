@@ -38,13 +38,23 @@
         />
         <label for="token-input">Token</label>
       </p-floatlabel>
-      <p-button
-        label="Save"
-        icon="pi pi-save"
-        class="mt-2 self-end"
-        [disabled]="!form.valid"
-        type="submit"
-      />
+      <div class="flex justify-between">
+        <p-button
+          label="Test connection"
+          icon="pi pi-sign-in"
+          severity="contrast"
+          variant="outlined"
+          class="mt-2 self-end"
+          (onClick)="test()"
+        />
+        <p-button
+          label="Save"
+          icon="pi pi-save"
+          class="mt-2 self-end"
+          [disabled]="!form.valid"
+          type="submit"
+        />
+      </div>
     </form>
   </p-card>
 </div>

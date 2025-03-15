@@ -12,6 +12,26 @@ export class ApiService {
   private store = inject(Store);
   private http = inject(HttpClient);
 
+  testConnection(
+    url: string,
+    database: string,
+    token: string,
+  ): Observable<{ error?: string }> {
+    return this.http
+      .get(`${url}/v1/database/${database}/logs?num_lines=1`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .pipe(
+        map(() => ({ error: undefined })),
+        catchError((err) => {
+          console.log(err.error);
+          return of({ error: err.error });
+        }),
+      );
+  }
+
   runQuery(query: string) {
     return this.postDb<SqlQueryResult[]>("sql", query);
   }
