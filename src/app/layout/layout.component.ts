@@ -22,11 +22,11 @@ import { ToastModule } from "primeng/toast";
 })
 export class LayoutComponent {
   startToolbar: MenuItem[] = [
-    {
-      routerLink: "/metrics",
-      label: "Metrics",
-      icon: PrimeIcons.CHART_LINE,
-    },
+    // {
+    //   routerLink: "/metrics",
+    //   label: "Metrics",
+    //   icon: PrimeIcons.CHART_LINE,
+    // },
     {
       routerLink: "/logs",
       label: "Logs",
