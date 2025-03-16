@@ -56,6 +56,14 @@ export const routes: Routes = [
             (m) => m.ReducersComponent,
           ),
       },
+      {
+        path: "metrics",
+        providers: [],
+        loadComponent: () =>
+          import("./pages/metrics/metrics.component").then(
+            (m) => m.MetricsComponent,
+          ),
+      },
     ],
   },
 ];

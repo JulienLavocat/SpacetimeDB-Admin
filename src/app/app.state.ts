@@ -13,6 +13,7 @@ export class SetDatabaseInfo {
     public instanceUrl: string,
     public database: string,
     public token: string,
+    public metricsUrl: string | null,
   ) {}
 }
 
@@ -30,6 +31,7 @@ export interface AppStateModel {
   instanceUrl: string;
   database: string;
   token: string;
+  metricsUrl: string | null;
 }
 
 @State<AppStateModel>({
@@ -38,6 +40,7 @@ export interface AppStateModel {
     instanceUrl: "",
     database: "",
     token: "",
+    metricsUrl: null,
   },
 })
 @Injectable()
@@ -100,6 +103,7 @@ export class AppState implements NgxsOnInit {
       instanceUrl: action.instanceUrl,
       database: action.database,
       token: action.token,
+      metricsUrl: action.metricsUrl,
     };
 
     ctx.patchState(newValues);

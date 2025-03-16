@@ -59,6 +59,7 @@ export class SettingsComponent {
           values.instanceUrl!,
           values.database!,
           values.token!,
+          "",
         ),
       )
       .pipe(
