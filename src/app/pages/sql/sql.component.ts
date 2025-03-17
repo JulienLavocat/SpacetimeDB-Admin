@@ -1,18 +1,18 @@
+import { AsyncPipe } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { Store } from "@ngxs/store";
 import { ButtonModule } from "primeng/button";
+import { DialogService } from "primeng/dynamicdialog";
 import { TabsModule } from "primeng/tabs";
+import { take, tap } from "rxjs";
 import { QueryComponent } from "./query/query.component";
+import { RenameTabComponent } from "./rename-tab/rename-tab.component";
 import {
   AddSqlTab,
-  SetSqlTabQuery,
+  SetSqlTabName,
   SqlState,
   UpdateSqlSelectedTab,
 } from "./sql.state";
-import { AsyncPipe } from "@angular/common";
-import { DialogService } from "primeng/dynamicdialog";
-import { RenameTabComponent } from "./rename-tab/rename-tab.component";
-import { take, tap } from "rxjs";
 
 @Component({
   selector: "app-sql",
@@ -49,8 +49,8 @@ export class SqlComponent {
       })
       .onClose.pipe(
         take(1),
-        tap((result) => {
-          if (result) this.store.dispatch(new SetSqlTabQuery(id, result));
+        tap((newName) => {
+          if (newName) this.store.dispatch(new SetSqlTabName(id, newName));
         }),
       )
       .subscribe();
