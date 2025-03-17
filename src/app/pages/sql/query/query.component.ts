@@ -1,6 +1,7 @@
 import { DecimalPipe, NgFor } from "@angular/common";
-import { Component, inject, Input, OnInit } from "@angular/core";
+import { Component, inject, Input } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { Store } from "@ngxs/store";
 import { editor } from "monaco-editor";
 import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { ButtonModule } from "primeng/button";
@@ -8,8 +9,7 @@ import { CardModule } from "primeng/card";
 import { TableModule } from "primeng/table";
 import { catchError, take, tap, throwError } from "rxjs";
 import { ApiService } from "../../../api";
-
-const LAST_QUERY = (tab: number) => `sql.last-query.${tab}`;
+import { SetSqlTabQuery } from "../sql.state";
 
 const NUMERIC_TYPES = new Set([
   "I8",
@@ -46,10 +46,12 @@ function algebraicTypeToColumn(type: any) {
   templateUrl: "./query.component.html",
   styleUrl: "./query.component.css",
 })
-export class QueryComponent implements OnInit {
-  @Input("tab") tab!: number;
+export class QueryComponent {
+  @Input("id") id!: string;
+  @Input("query") query = "";
 
   private readonly api = inject(ApiService);
+  private readonly store = inject(Store);
 
   editorOptions: editor.IStandaloneEditorConstructionOptions = {
     theme: "vs-dark",
@@ -60,7 +62,7 @@ export class QueryComponent implements OnInit {
     },
     placeholder: "Enter your query",
   };
-  query = "";
+
   queryTime = 0;
   rowsCount = 0;
   isLoading = false;
@@ -68,14 +70,10 @@ export class QueryComponent implements OnInit {
   columns: { name: string; type: string }[] = [];
   rows: unknown[] = [];
 
-  ngOnInit(): void {
-    this.query = localStorage.getItem(LAST_QUERY(this.tab)) ?? "";
-  }
-
   runQuery() {
-    localStorage.setItem(LAST_QUERY(this.tab), this.query);
     const startDate = Date.now();
     this.isLoading = true;
+    this.store.dispatch(new SetSqlTabQuery(this.id, this.query));
     this.api
       .runQuery(this.query)
       .pipe(
@@ -85,7 +83,6 @@ export class QueryComponent implements OnInit {
           const queryTime = Date.now() - startDate;
           const columns = data.schema.elements;
 
-          console.log(data);
           this.isLoading = false;
           this.queryTime = queryTime;
           this.error = "";

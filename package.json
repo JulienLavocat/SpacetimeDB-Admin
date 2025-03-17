@@ -20,6 +20,7 @@
     "@ngxs/devtools-plugin": "19.0.0",
     "@ngxs/hmr-plugin": "19.0.0",
     "@ngxs/logger-plugin": "19.0.0",
+    "@ngxs/storage-plugin": "^19.0.0",
     "@ngxs/store": "^19.0.0",
     "@primeng/themes": "^19.0.9",
     "@tailwindcss/postcss": "^4.0.12",

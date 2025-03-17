@@ -4,6 +4,8 @@ import { SchemaState } from "./pages/schema/schema.state";
 import { LogsState } from "./pages/logs/logs.state";
 import { ReducersState } from "./pages/reducers/reducers.state";
 import { dbNotSetGuard } from "./utils/db-not-set.guard";
+import { SqlState } from "./pages/sql/sql.state";
+import { withStorageFeature } from "@ngxs/storage-plugin";
 
 export const routes: Routes = [
   {
@@ -26,6 +28,7 @@ export const routes: Routes = [
       {
         path: "sql",
         canActivate: [dbNotSetGuard],
+        providers: [provideStates([SqlState], withStorageFeature([SqlState]))],
         loadComponent: () =>
           import("./pages/sql/sql.component").then((m) => m.SqlComponent),
       },

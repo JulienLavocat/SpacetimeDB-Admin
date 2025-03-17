@@ -41,7 +41,7 @@ export interface AppStateModel {
   },
 })
 @Injectable()
-export class AppState implements NgxsOnInit {
+export class AppState {
   private readonly api = inject(ApiService);
   private readonly toast = inject(MessageService);
 
@@ -58,15 +58,6 @@ export class AppState implements NgxsOnInit {
   @Selector()
   static selectHasCredentialsSet(state: AppStateModel) {
     return !!state.instanceUrl && !!state.token && !!state.database;
-  }
-
-  ngxsOnInit(ctx: StateContext<any>): void {
-    const data = localStorage.getItem(DB_DATA);
-    if (data) {
-      ctx.patchState({
-        ...JSON.parse(data),
-      });
-    }
   }
 
   @Action(TestDatabaseConnectionAction)
@@ -96,14 +87,11 @@ export class AppState implements NgxsOnInit {
 
   @Action(SetDatabaseInfo)
   setDatabaseInfo(ctx: StateContext<AppStateModel>, action: SetDatabaseInfo) {
-    const newValues = {
+    ctx.patchState({
       instanceUrl: action.instanceUrl,
       database: action.database,
       token: action.token,
-    };
-
-    ctx.patchState(newValues);
-    localStorage.setItem(DB_DATA, JSON.stringify(newValues));
+    });
     return EMPTY;
   }
 }

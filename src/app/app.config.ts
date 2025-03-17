@@ -3,19 +3,20 @@ import {
   importProvidersFrom,
   provideZoneChangeDetection,
 } from "@angular/core";
-import { provideRouter } from "@angular/router";
-import { providePrimeNG } from "primeng/config";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
+import { provideRouter } from "@angular/router";
 import Aura from "@primeng/themes/aura";
+import { providePrimeNG } from "primeng/config";
 
-import { routes } from "./app.routes";
 import { withNgxsReduxDevtoolsPlugin } from "@ngxs/devtools-plugin";
 import { withNgxsLoggerPlugin } from "@ngxs/logger-plugin";
+import { withNgxsStoragePlugin } from "@ngxs/storage-plugin";
 import { provideStore } from "@ngxs/store";
-import { AppState } from "./app.state";
 import { MonacoEditorModule } from "ngx-monaco-editor-v2";
-import { provideApi } from "./api/api.provider";
 import { MessageService } from "primeng/api";
+import { provideApi } from "./api/api.provider";
+import { routes } from "./app.routes";
+import { AppState } from "./app.state";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -32,6 +33,7 @@ export const appConfig: ApplicationConfig = {
       [AppState],
       withNgxsReduxDevtoolsPlugin(),
       withNgxsLoggerPlugin(),
+      withNgxsStoragePlugin({ keys: [AppState] }),
     ),
     importProvidersFrom([
       MonacoEditorModule.forRoot({
