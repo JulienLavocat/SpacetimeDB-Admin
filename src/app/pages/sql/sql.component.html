@@ -1,1 +1,20 @@
-<app-query [tabIndex]="1"></app-query>
+<p-tabs
+  [value]="selectedTab"
+  class="flex grow rounded-sm"
+  scrollable
+  (valueChange)="onTabChange($event)"
+>
+  <p-tablist>
+    @for (tab of tabs; track tab) {
+      <p-tab [value]="tab">Query {{ tab + 1 }}</p-tab>
+    }
+    <p-tab value="add">+</p-tab>
+  </p-tablist>
+  <p-tabpanels class="flex grow">
+    @for (tab of tabs; track tab) {
+      <p-tabpanel [value]="tab" class="flex grow">
+        <app-query [tab]="tab" />
+      </p-tabpanel>
+    }
+  </p-tabpanels>
+</p-tabs>
