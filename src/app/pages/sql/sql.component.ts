@@ -1,14 +1,16 @@
 import { AsyncPipe } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { Store } from "@ngxs/store";
 import { ButtonModule } from "primeng/button";
 import { DialogService } from "primeng/dynamicdialog";
+import { ProgressSpinnerModule } from "primeng/progressspinner";
 import { TabsModule } from "primeng/tabs";
 import { take, tap } from "rxjs";
 import { QueryComponent } from "./query/query.component";
 import { RenameTabComponent } from "./rename-tab/rename-tab.component";
 import {
   AddSqlTab,
+  LoadSqlSchema,
   SetSqlTabName,
   SqlState,
   UpdateSqlSelectedTab,
@@ -16,15 +18,26 @@ import {
 
 @Component({
   selector: "app-sql",
-  imports: [QueryComponent, TabsModule, ButtonModule, AsyncPipe],
+  imports: [
+    QueryComponent,
+    TabsModule,
+    ButtonModule,
+    AsyncPipe,
+    ProgressSpinnerModule,
+  ],
   templateUrl: "./sql.component.html",
   styleUrl: "./sql.component.css",
 })
-export class SqlComponent {
+export class SqlComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly dialog = inject(DialogService);
 
+  isLoading$ = this.store.select(SqlState.selectIsLoading);
   tabs$ = this.store.select(SqlState.selectTabs);
+
+  ngOnInit(): void {
+    this.store.dispatch(new LoadSqlSchema());
+  }
 
   onTabChange(value: string | number) {
     if (value === "add") {

@@ -16,6 +16,7 @@ export interface Reducer {
 
 export interface Schema {
   reducers: Reducer[];
+  tables: Table[];
 }
 
 export function parseSchema(schema: RawSchema): Schema {
@@ -41,5 +42,11 @@ export function parseSchema(schema: RawSchema): Schema {
     return result;
   });
 
-  return { reducers };
+  const tables: Table[] = schema.tables.map((e) => ({
+    name: e.name,
+    columns: [],
+    primary_key: {},
+  }));
+
+  return { reducers, tables };
 }

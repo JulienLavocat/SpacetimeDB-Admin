@@ -42,7 +42,7 @@ export interface RawReducer {
 }
 
 export interface RawSchema {
-  tables: any[];
+  tables: { name: string }[];
   reducers: RawReducer[];
   types: any[];
 }

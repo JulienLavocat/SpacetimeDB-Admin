@@ -1,13 +1,15 @@
 import { DecimalPipe, NgFor } from "@angular/common";
 import { Component, inject, Input, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { editor } from "monaco-editor";
+import * as editor from "monaco-editor";
 import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { TableModule } from "primeng/table";
 import { catchError, take, tap, throwError } from "rxjs";
 import { ApiService } from "../../../api";
+import { Store } from "@ngxs/store";
+import { SqlState } from "../sql.state";
 
 const LAST_QUERY = (tab: string) => `sql.last-query.${tab}`;
 
@@ -32,6 +34,29 @@ function algebraicTypeToColumn(type: any) {
   return "text";
 }
 
+let existingCompletion: editor.IDisposable | null = null;
+
+const KEYWORDS = [
+  "SELECT",
+  "INSERT",
+  "DELETE",
+  "UPDATE",
+  "SET",
+  "LIMIT",
+  "COUNT",
+  "INTO",
+  "VALUES",
+  "SHOW",
+  "FROM",
+  "WHERE",
+  "JOIN",
+  "ON",
+  "INNER",
+  "AS",
+  "AND",
+  "OR",
+];
+
 @Component({
   selector: "app-query",
   imports: [
@@ -50,8 +75,9 @@ export class QueryComponent implements OnInit {
   @Input("id") id!: string;
 
   private readonly api = inject(ApiService);
+  private readonly store = inject(Store);
 
-  editorOptions: editor.IStandaloneEditorConstructionOptions = {
+  editorOptions: editor.editor.IStandaloneEditorConstructionOptions = {
     theme: "vs-dark",
     language: "sql",
     automaticLayout: true,
@@ -70,6 +96,48 @@ export class QueryComponent implements OnInit {
 
   ngOnInit(): void {
     this.query = localStorage.getItem(LAST_QUERY(this.id)) ?? "";
+  }
+
+  onEditorReady() {
+    const monaco: typeof editor = (window as any).monaco;
+
+    if (existingCompletion) {
+      existingCompletion.dispose();
+    }
+
+    const tables = this.store.selectSnapshot(SqlState.selectTables);
+
+    existingCompletion = monaco.languages.registerCompletionItemProvider(
+      "sql",
+      {
+        triggerCharacters: [" ", "."],
+        provideCompletionItems(model, position, context, token) {
+          const word = model.getWordUntilPosition(position);
+          const range = {
+            startLineNumber: position.lineNumber,
+            endLineNumber: position.lineNumber,
+            startColumn: word.startColumn,
+            endColumn: word.endColumn,
+          };
+          const tablesSuggestions = tables.map((table) => ({
+            label: table.name,
+            insertText: table.name,
+            kind: editor.languages.CompletionItemKind.Class,
+            range,
+          }));
+
+          const keywordsSuggestions = KEYWORDS.map((kw) => ({
+            label: kw,
+            insertText: kw,
+            kind: editor.languages.CompletionItemKind.Keyword,
+            range,
+          }));
+          return {
+            suggestions: [...tablesSuggestions, ...keywordsSuggestions],
+          };
+        },
+      },
+    );
   }
 
   runQuery() {

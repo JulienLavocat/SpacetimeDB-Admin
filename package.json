@@ -25,6 +25,7 @@
     "@primeng/themes": "^19.0.9",
     "@tailwindcss/postcss": "^4.0.12",
     "monaco-editor": "^0.52.2",
+    "monaco-sql-languages": "^0.13.1",
     "ngx-monaco-editor-v2": "^19.0.2",
     "postcss": "^8.5.3",
     "primeicons": "^7.0.0",

@@ -4,6 +4,7 @@
       style="height: 100%"
       [options]="editorOptions"
       [(ngModel)]="query"
+      (onInit)="onEditorReady()"
     ></ngx-monaco-editor>
   </div>
   <div class="flex justify-between w-full h-fit items-center my-4">
