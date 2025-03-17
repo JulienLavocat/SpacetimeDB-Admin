@@ -1,6 +1,5 @@
 import { Routes } from "@angular/router";
 import { provideStates } from "@ngxs/store";
-import { SqlState } from "./pages/sql/sql.state";
 import { SchemaState } from "./pages/schema/schema.state";
 import { LogsState } from "./pages/logs/logs.state";
 import { ReducersState } from "./pages/reducers/reducers.state";
@@ -26,7 +25,6 @@ export const routes: Routes = [
       },
       {
         path: "sql",
-        providers: [provideStates([SqlState])],
         canActivate: [dbNotSetGuard],
         loadComponent: () =>
           import("./pages/sql/sql.component").then((m) => m.SqlComponent),

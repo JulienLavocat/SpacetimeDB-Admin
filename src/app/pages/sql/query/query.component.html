@@ -1,0 +1,63 @@
+<div class="flex grow flex-col max-w-[calc(100vw-2rem)]">
+  <div class="h-20">
+    <ngx-monaco-editor
+      style="height: 100%"
+      [options]="editorOptions"
+      [(ngModel)]="query"
+    ></ngx-monaco-editor>
+  </div>
+  <div class="flex justify-between w-full h-fit items-center my-4">
+    <p>
+      <span class="pi pi-play mr-1"></span>
+      {{ rowsCount | number }} rows - {{ queryTime }}ms
+    </p>
+    <p-button label="Run query" (click)="runQuery()" [disabled]="isLoading" />
+  </div>
+  @if (error) {
+    <p-card>
+      <p>{{ error }}</p>
+    </p-card>
+  } @else if (columns.length > 0) {
+    <p-table
+      [value]="rows"
+      stripedRows
+      showGridlines
+      showCurrentPageReport
+      paginator
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50, 100]"
+      scrollable
+      scrollHeight="550px"
+      size="small"
+    >
+      <ng-template #header>
+        <tr>
+          @for (col of columns; track $index) {
+            <th [pSortableColumn]="col.name">
+              <div class="flex items-center justify-between">
+                <span class="flex gap-1.5 items-center"
+                  >{{ col.name }} <p-sortIcon [field]="col.name"
+                /></span>
+                <p-columnFilter
+                  [type]="col.type"
+                  [field]="col.name"
+                  display="menu"
+                />
+              </div>
+            </th>
+          }
+        </tr>
+      </ng-template>
+      <ng-template #body let-rowData>
+        <tr>
+          <td *ngFor="let col of columns">{{ rowData[col.name] }}</td>
+        </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td [attr.colspan]="columns.length">No rows found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+</div>
