@@ -1,6 +1,7 @@
 import { DecimalPipe, NgFor } from "@angular/common";
 import { Component, inject, Input, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { Store } from "@ngxs/store";
 import * as editor from "monaco-editor";
 import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { ButtonModule } from "primeng/button";
@@ -8,7 +9,6 @@ import { CardModule } from "primeng/card";
 import { TableModule } from "primeng/table";
 import { catchError, take, tap, throwError } from "rxjs";
 import { ApiService } from "../../../api";
-import { Store } from "@ngxs/store";
 import { SqlState } from "../sql.state";
 
 const LAST_QUERY = (tab: string) => `sql.last-query.${tab}`;
