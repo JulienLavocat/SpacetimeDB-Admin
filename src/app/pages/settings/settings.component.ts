@@ -15,6 +15,7 @@ import {
 } from "../../app.state";
 
 @Component({
+  standalone: true,
   selector: "app-settings",
   imports: [
     ReactiveFormsModule,

@@ -3,10 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "start": "ng serve --configuration development",
+    "build": "ng build --configuration production"
   },
   "private": true,
   "dependencies": {
@@ -23,6 +21,8 @@
     "@ngxs/storage-plugin": "^19.0.0",
     "@ngxs/store": "^19.0.0",
     "@primeng/themes": "^19.0.9",
+    "@sentry/angular": "^9.7.0",
+    "@sentry/tracing": "^7.120.3",
     "@tailwindcss/postcss": "^4.0.12",
     "monaco-editor": "^0.52.2",
     "monaco-sql-languages": "^0.13.1",
