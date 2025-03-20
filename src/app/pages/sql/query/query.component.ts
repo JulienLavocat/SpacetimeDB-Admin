@@ -58,6 +58,7 @@ const KEYWORDS = [
 ];
 
 @Component({
+  standalone: true,
   selector: "app-query",
   imports: [
     NgFor,
@@ -88,6 +89,7 @@ export class QueryComponent implements OnInit {
   };
   query = "";
   queryTime = 0;
+  dbQueryTime = 0;
   rowsCount = 0;
   isLoading = false;
   error = "";
@@ -153,9 +155,9 @@ export class QueryComponent implements OnInit {
           const queryTime = Date.now() - startDate;
           const columns = data.schema.elements;
 
-          console.log(data);
           this.isLoading = false;
           this.queryTime = queryTime;
+          this.dbQueryTime = data.total_duration_micros / 1000;
           this.error = "";
           this.columns = columns.map((e) => ({
             name: e.name.some,

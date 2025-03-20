@@ -1,6 +1,7 @@
 export interface SqlQueryResult {
   rows: any[][];
   schema: { elements: { name: { some: string }; algebraic_type: {} }[] };
+  total_duration_micros: number;
 }
 
 export type StdbTypes =

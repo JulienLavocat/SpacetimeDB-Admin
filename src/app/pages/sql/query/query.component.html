@@ -10,7 +10,9 @@
   <div class="flex justify-between w-full h-fit items-center my-4">
     <p>
       <span class="pi pi-play mr-1"></span>
-      {{ rowsCount | number }} rows - {{ queryTime }}ms
+      {{ rowsCount | number }} rows - {{ queryTime }}ms ({{
+        dbQueryTime | number
+      }}ms)
     </p>
     <p-button label="Run query" (click)="runQuery()" [disabled]="isLoading" />
   </div>
