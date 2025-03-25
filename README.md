@@ -2,6 +2,8 @@
 
 An admin dashboard for SpacetimeDB.
 
+Live version here: https://stdb-admin.jlavocat.eu
+
 ## TODO List
 
 - [] Metrics are not yet implemented
