@@ -27,6 +27,8 @@ export interface Schema {
 }
 
 export function parseSchema(schema: RawSchema): Schema {
+  schema.types.sort((a, b) => a.ty - b.ty);
+
   const reducers = schema.reducers.map((reducer) => {
     const result: Reducer = {
       name: reducer.name,
