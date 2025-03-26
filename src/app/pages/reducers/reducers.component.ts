@@ -27,7 +27,7 @@ import { InputGroupAddonModule } from "primeng/inputgroupaddon";
     InputTextModule,
   ],
   templateUrl: "./reducers.component.html",
-  styleUrl: "./reducers.component.scss",
+  styleUrl: "./reducers.component.css",
 })
 export class ReducersComponent implements OnInit {
   private readonly store = inject(Store);

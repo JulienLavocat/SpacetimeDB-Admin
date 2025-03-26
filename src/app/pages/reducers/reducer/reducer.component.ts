@@ -11,7 +11,7 @@ import { ReducerParamComponent } from "../reducer-param/reducer-param.component"
   selector: "app-reducer",
   imports: [CardModule, ReducerParamComponent, ButtonModule, ChipModule],
   templateUrl: "./reducer.component.html",
-  styleUrl: "./reducer.component.scss",
+  styleUrl: "./reducer.component.css",
 })
 export class ReducerComponent {
   @Input("reducer") reducer!: Reducer;

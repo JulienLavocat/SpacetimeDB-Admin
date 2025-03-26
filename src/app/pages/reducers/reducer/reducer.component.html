@@ -1,16 +1,11 @@
 <p-card styleClass="flex">
   <div class="flex justify-between items-center">
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 reducer">
       <p class="flex">
         {{ reducer.name }}
         <span>(</span>
         @for (param of reducer.params; track $index) {
-          <app-reducer-param
-            [type]="param.type"
-            [name]="param.name"
-            [subType]="param.subType"
-            [last]="$last"
-          />
+          <app-reducer-param [param]="param" [last]="$last" />
         }
         <span>)</span>
       </p>

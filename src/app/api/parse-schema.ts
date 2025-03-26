@@ -8,9 +8,16 @@ export interface Table {
   primary_key: {};
 }
 
+export interface ReducerParam {
+  name: string;
+  type: StdbTypes;
+  arrayType: StdbTypes | null;
+  refType: { name: string; index: number } | null;
+}
+
 export interface Reducer {
   name: string;
-  params: { name: string; type: StdbTypes; subType: StdbTypes | null }[];
+  params: ReducerParam[];
   lifecycle: ReducerLifecycle | null;
 }
 
@@ -24,14 +31,24 @@ export function parseSchema(schema: RawSchema): Schema {
     const result: Reducer = {
       name: reducer.name,
       params: reducer.params.elements.map((e) => {
-        const type = Object.keys(e.algebraic_type)[0] as StdbTypes;
+        let [type, typeValue] = Object.entries(
+          e.algebraic_type,
+        )[0] as unknown as [StdbTypes, number];
+
+        const arrayType: ReducerParam["arrayType"] =
+          type === "Array"
+            ? (Object.keys(e.algebraic_type.Array)[0] as StdbTypes)
+            : null;
+        const refType: ReducerParam["refType"] =
+          type === "Ref"
+            ? { name: schema.types[typeValue].name.name, index: typeValue }
+            : null;
+
         return {
           name: e.name.some ?? "",
           type,
-          subType:
-            type !== "Array"
-              ? null
-              : (Object.keys(e.algebraic_type.Array)[0] as StdbTypes),
+          arrayType,
+          refType,
         };
       }),
       lifecycle: reducer.lifecycle.some
