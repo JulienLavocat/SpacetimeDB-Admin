@@ -3,3 +3,23 @@
     Source Code Pro,
     monospace !important;
 }
+
+.reducer-input {
+  font-family: inherit;
+  font-feature-settings: inherit;
+  color: var(--p-inputtext-color);
+  background: var(--p-inputtext-background);
+  padding-inline: 0.4rem;
+  padding-block: 0.1rem;
+  border: 1px solid var(--p-inputtext-border-color);
+  transition:
+    background var(--p-inputtext-transition-duration),
+    color var(--p-inputtext-transition-duration),
+    border-color var(--p-inputtext-transition-duration),
+    outline-color var(--p-inputtext-transition-duration),
+    box-shadow var(--p-inputtext-transition-duration);
+  appearance: none;
+  border-radius: var(--p-inputtext-border-radius);
+  outline-color: transparent;
+  box-shadow: var(--p-inputtext-shadow);
+}

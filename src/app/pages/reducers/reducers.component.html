@@ -15,7 +15,10 @@
 
     <div class="grow flex flex-col gap-2">
       @for (reducer of data.reducers; track $index) {
-        <app-reducer [reducer]="reducer" />
+        <app-reducer
+          [reducer]="reducer"
+          [disabled]="isReducerDisabled(reducer)"
+        />
       }
     </div>
   }

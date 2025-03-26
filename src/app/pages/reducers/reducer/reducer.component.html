@@ -1,25 +1,60 @@
 <p-card styleClass="flex">
-  <div class="flex justify-between items-center">
+  <form class="flex justify-between items-center" [formGroup]="form">
     <div class="flex items-center gap-2 reducer">
-      <p class="flex">
+      <p class="flex items-center">
         {{ reducer.name }}
         <span>(</span>
         @for (param of reducer.params; track $index) {
-          <app-reducer-param [param]="param" [last]="$last" />
+          <div [ngClass]="{ 'mr-1': !$last }">
+            <span>{{ displayParam(param) }}</span>
+            @if (!disabled) {
+              @if (param.type === "Bool") {
+                <p-checkBox
+                  [formControlName]="param.name"
+                  binary
+                  [pTooltip]="getTooltip(param)"
+                  tooltipPosition="bottom"
+                />
+              } @else {
+                <input
+                  class="reducer-input"
+                  [type]="getReducerType(param.type)"
+                  [pTooltip]="getTooltip(param)"
+                  tooltipPosition="bottom"
+                  [formControlName]="param.name"
+                  [placeholder]="
+                    (param.arrayType ? param.arrayType + '[]' : param.type)
+                      | lowercase
+                  "
+                />
+              }
+            }
+            @if (!$last) {
+              <span>,</span>
+            }
+          </div>
         }
         <span>)</span>
       </p>
     </div>
     @if (reducer.lifecycle) {
-      <p-chip [label]="reducer.lifecycle" />
+      <p-chip
+        [label]="reducer.lifecycle"
+        pTooltip="This reducer is bound to a lifecycle event and can't be called manually"
+      />
     } @else {
       <p-button
         [loading]="isLoading"
-        [disabled]="reducer.params.length > 0"
+        [disabled]="disabled"
+        [pTooltip]="
+          disabled
+            ? 'This reducer is using custom types which are not yet supported'
+            : 'Call reducer'
+        "
         icon="pi pi-play"
         variant="outlined"
         (click)="call()"
       />
     }
-  </div>
+  </form>
 </p-card>
