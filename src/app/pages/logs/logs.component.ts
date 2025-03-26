@@ -20,6 +20,7 @@ import {
   SetSelectedLogLevels,
 } from "./logs.state";
 import { ReverseIterablePipe } from "../../utils/reverse-iterable.pipe";
+import { LogLine } from "../../api";
 
 const levelsIcons: Record<string, string> = {
   trace: PrimeIcons.INFO_CIRCLE,
@@ -76,10 +77,11 @@ export class LogsComponent implements OnInit, OnDestroy {
     return levelsIcons[level];
   }
 
-  printFilename(filename: string, lineNumber: number) {
-    return filename === "spacetimedb"
-      ? "spacetimedb"
-      : `${filename}:${lineNumber}`;
+  printFilename(line: LogLine) {
+    if (!line.filename) return line.target ?? "unknown";
+    if (line.filename === "spacetimedb") return "spacetimedb";
+    if (line.filename === "external") return "external";
+    return `${line.filename}:${line.line_number}`;
   }
 
   filterLogs(event: Event) {

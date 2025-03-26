@@ -1,19 +1,14 @@
 import { LowerCasePipe, NgClass } from "@angular/common";
 import { Component, inject, Input, OnInit } from "@angular/core";
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-} from "@angular/forms";
+import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
+import { CheckboxModule } from "primeng/checkbox";
 import { ChipModule } from "primeng/chip";
+import { TooltipModule } from "primeng/tooltip";
 import { take, tap } from "rxjs";
 import { ApiService, Reducer, ReducerParam, StdbTypes } from "../../../api";
-import { TooltipModule } from "primeng/tooltip";
-import { CheckboxModule } from "primeng/checkbox";
 
 const NUMERIC_TYPES: Set<StdbTypes> = new Set([
   "I8",

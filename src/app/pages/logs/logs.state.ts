@@ -62,7 +62,7 @@ export class LogsState {
       .filter(
         (l) =>
           l.message.includes(state.filter) &&
-          l.filename?.includes(state.filesFilter),
+          (l.filename ?? "").includes(state.filesFilter),
       );
   }
 

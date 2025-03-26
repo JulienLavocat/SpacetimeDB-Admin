@@ -46,9 +46,7 @@
             ><i class="mr-1" [ngClass]="getLevelIcon(line.level)"></i
             >{{ line.level }}</span
           >
-          <span class="ml-1.5 text-yellow-400">{{
-            printFilename(line.filename, line.line_number)
-          }}</span
+          <span class="ml-1.5 text-yellow-400">{{ printFilename(line) }}</span
           >: {{ line.message }}
         </div>
       } @empty {
