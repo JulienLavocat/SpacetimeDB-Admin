@@ -37,10 +37,15 @@ export function parseSchema(schema: RawSchema): Schema {
           e.algebraic_type,
         )[0] as unknown as [StdbTypes, number];
 
-        const arrayType: ReducerParam["arrayType"] =
+        let arrayType: ReducerParam["arrayType"] =
           type === "Array"
             ? (Object.keys(e.algebraic_type.Array)[0] as StdbTypes)
             : null;
+        if (arrayType === "Ref") {
+          arrayType = schema.types[
+            e.algebraic_type.Array.Ref as unknown as number
+          ].name.name as any;
+        }
         const refType: ReducerParam["refType"] =
           type === "Ref"
             ? { name: schema.types[typeValue].name.name, index: typeValue }
