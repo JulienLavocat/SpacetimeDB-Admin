@@ -166,6 +166,14 @@ export class QueryComponent implements OnInit {
           this.rowsCount = data.rows.length;
           this.rows = data.rows.map((row) =>
             row.reduce((acc, next, nextIndex) => {
+              // Enum type
+              if (Object.keys(columns[nextIndex].algebraic_type)[0] === "Sum") {
+                acc[columns[nextIndex].name.some] = (
+                  columns[nextIndex].algebraic_type as any
+                ).Sum.variants[next[0]].name.some;
+                return acc;
+              }
+
               acc[columns[nextIndex].name.some] = next;
               return acc;
             }, {}),
