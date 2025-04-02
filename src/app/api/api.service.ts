@@ -4,8 +4,9 @@ import { Store } from "@ngxs/store";
 import { catchError, map, Observable, of } from "rxjs";
 import { AppState } from "../app.state";
 import { streamLogs } from "./logs-fetcher";
-import { LogLine, RawSchema, ReducerCallResult, SqlQueryResult } from "./types";
+import { LogLine, RawSchema, ReducerCallResult } from "./types";
 import { parseSchema } from "./parse-schema";
+import { RawModuleRef9, SqlQueryResult } from "./raw-types";
 
 @Injectable()
 export class ApiService {
@@ -37,7 +38,7 @@ export class ApiService {
   }
 
   getRawSchema() {
-    return this.getDb<RawSchema>("schema?version=9");
+    return this.getDb<RawModuleRef9>("schema?version=9");
   }
 
   getSchema() {

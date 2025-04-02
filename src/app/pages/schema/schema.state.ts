@@ -1,13 +1,13 @@
 import { inject, Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { tap } from "rxjs";
-import { RawSchema } from "../../api";
+import { RawModuleRef9 } from "../../api/raw-types";
 import { ApiService } from "../../api/api.service";
 import { LoadSchema } from "./schema.actions";
 
 export interface SchemaStateModel {
   isLoading: boolean;
-  schema: RawSchema | null;
+  schema: RawModuleRef9 | null;
 }
 
 @State<SchemaStateModel>({
