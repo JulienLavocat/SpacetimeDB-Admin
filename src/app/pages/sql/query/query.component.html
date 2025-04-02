@@ -10,9 +10,8 @@
   <div class="flex justify-between w-full h-fit items-center my-4">
     <p>
       <span class="pi pi-play mr-1"></span>
-      {{ rowsCount | number }} rows - {{ queryTime }}ms ({{
-        dbQueryTime | number
-      }}ms)
+      {{ rowsCount | number }} rows - {{ queryTime }}ms (db:
+      {{ dbQueryTime | number }}ms, parser: {{ parseTime | number }}ms)
     </p>
     <p-button label="Run query" (click)="runQuery()" [disabled]="isLoading" />
   </div>
@@ -38,9 +37,9 @@
           @for (col of columns; track $index) {
             <th [pSortableColumn]="col.name">
               <div class="flex items-center justify-between">
-                <span class="flex gap-1.5 items-center"
-                  >{{ col.name }} <p-sortIcon [field]="col.name"
-                /></span>
+                <span class="flex gap-1.5 items-center">
+                  {{ col.name }} <p-sortIcon [field]="col.name" />
+                </span>
                 <p-columnFilter
                   [type]="col.type"
                   [field]="col.name"

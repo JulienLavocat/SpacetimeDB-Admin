@@ -10,6 +10,7 @@ import { TableModule } from "primeng/table";
 import { catchError, take, tap, throwError } from "rxjs";
 import { ApiService } from "../../../api";
 import { SqlState } from "../sql.state";
+import { SqlQueryResult } from "../../../api/raw-types";
 
 const LAST_QUERY = (tab: string) => `sql.last-query.${tab}`;
 
@@ -35,6 +36,51 @@ function algebraicTypeToColumn(type: any) {
 }
 
 let existingCompletion: editor.IDisposable | null = null;
+
+export function parseRows(
+  rows: any[][],
+  columns: SqlQueryResult["schema"]["elements"],
+) {
+  const typeRegistry: ("enum" | "option" | "raw")[] = columns.map((column) => {
+    // Either and option or an enum
+    if (column.algebraic_type.Sum) {
+      const variants = column.algebraic_type.Sum.variants;
+      if (variants.length === 2) {
+        const names = variants.reduce(
+          (acc, next) => acc.add(next.name.some),
+          new Set(),
+        );
+        if (names.has("none") && names.has("some")) {
+          return "option";
+        }
+      }
+      return "enum";
+    }
+
+    return "raw";
+  });
+
+  return rows.map((row) =>
+    row.reduce((acc, next, nextIndex) => {
+      const type = typeRegistry[nextIndex];
+
+      switch (type) {
+        case "enum":
+          acc[columns[nextIndex].name.some] =
+            columns[nextIndex].algebraic_type.Sum?.variants[next[0]].name.some;
+          return acc;
+
+        case "option":
+          acc[columns[nextIndex].name.some] = next[0] === 1 ? "" : next[1]; // if none ? none : some
+          return acc;
+
+        case "raw":
+          acc[columns[nextIndex].name.some] = next;
+          return acc;
+      }
+    }, {}),
+  );
+}
 
 const KEYWORDS = [
   "SELECT",
@@ -90,6 +136,7 @@ export class QueryComponent implements OnInit {
   query = "";
   queryTime = 0;
   dbQueryTime = 0;
+  parseTime = 0;
   rowsCount = 0;
   isLoading = false;
   error = "";
@@ -154,30 +201,21 @@ export class QueryComponent implements OnInit {
           const data = results[0];
           const queryTime = Date.now() - startDate;
           const columns = data.schema.elements;
+          const parseStart = Date.now();
+          const rows = parseRows(data.rows, columns);
+          const parseTime = Date.now() - parseStart;
 
           this.isLoading = false;
-          this.queryTime = queryTime;
           this.dbQueryTime = data.total_duration_micros / 1000;
+          this.parseTime = parseTime;
+          this.queryTime = queryTime + parseTime;
           this.error = "";
           this.columns = columns.map((e) => ({
             name: e.name.some,
             type: algebraicTypeToColumn(e.algebraic_type),
           }));
           this.rowsCount = data.rows.length;
-          this.rows = data.rows.map((row) =>
-            row.reduce((acc, next, nextIndex) => {
-              // Enum type
-              if (Object.keys(columns[nextIndex].algebraic_type)[0] === "Sum") {
-                acc[columns[nextIndex].name.some] = (
-                  columns[nextIndex].algebraic_type as any
-                ).Sum.variants[next[0]].name.some;
-                return acc;
-              }
-
-              acc[columns[nextIndex].name.some] = next;
-              return acc;
-            }, {}),
-          );
+          this.rows = rows;
         }),
         catchError((err) => {
           this.isLoading = false;
