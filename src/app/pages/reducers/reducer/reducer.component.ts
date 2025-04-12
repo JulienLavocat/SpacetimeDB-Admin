@@ -9,27 +9,10 @@ import { ChipModule } from "primeng/chip";
 import { TooltipModule } from "primeng/tooltip";
 import { take, tap } from "rxjs";
 import { ApiService, Reducer, ReducerParam, StdbTypes } from "../../../api";
-
-const NUMERIC_TYPES: Set<StdbTypes> = new Set([
-  "I8",
-  "U8",
-  "F8",
-  "I16",
-  "U16",
-  "F16",
-  "I32",
-  "U32",
-  "F32",
-  "I64",
-  "U64",
-  "F64",
-  "I128",
-  "U128",
-  "F128",
-]);
+import { NUMERIC_TYPES } from "../../../api/raw-types";
 
 function parseParamToValue(param: ReducerParam, value: string) {
-  if (!NUMERIC_TYPES.has(param.type)) return value;
+  if (!NUMERIC_TYPES.has(param.type as any)) return value;
   if (param.type.startsWith("F")) return parseFloat(value);
   return parseInt(value);
 }
@@ -129,7 +112,7 @@ export class ReducerComponent implements OnInit {
   }
 
   getReducerType(type: StdbTypes) {
-    if (NUMERIC_TYPES.has(type)) {
+    if (NUMERIC_TYPES.has(type as any)) {
       return "number";
     }
 

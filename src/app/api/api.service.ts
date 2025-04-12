@@ -38,7 +38,12 @@ export class ApiService {
   }
 
   getRawSchema() {
-    return this.getDb<RawModuleRef9>("schema?version=9");
+    return this.getDb<RawModuleRef9>("schema?version=9").pipe(
+      map((schema) => {
+        schema.types.sort((a, b) => a.ty - b.ty);
+        return schema;
+      }),
+    );
   }
 
   getSchema() {

@@ -2,11 +2,30 @@
   <p-progress-spinner></p-progress-spinner>
 }
 @if (!(isLoading$ | async) && (schema$ | async); as schema) {
-  <div class="w-full">
+  <div class="h-full w-full flex flex-col">
+    <p-accordion styleClass="w-full" [value]="0">
+      <p-accordion-panel value="0">
+        <p-accordion-header>
+          Tables ({{ schema.tables.length }})
+        </p-accordion-header>
+        <p-accordion-content>
+          <div class="flex flex-wrap gap-4">
+            @for (table of schema.tables; track $index) {
+              <app-table [table]="table" [schema]="schema"></app-table>
+            }
+          </div>
+        </p-accordion-content>
+      </p-accordion-panel>
+    </p-accordion>
+    <div class="flex items-center my-8">
+      <p-divider align="center" />
+      <b class="shrink-0 mx-4">Raw schema</b>
+      <p-divider />
+    </div>
     <ngx-monaco-editor
       style="height: 100%"
       [options]="editorOptions"
-      [ngModel]="schema"
+      [ngModel]="getRawSchema(schema)"
     />
   </div>
 }

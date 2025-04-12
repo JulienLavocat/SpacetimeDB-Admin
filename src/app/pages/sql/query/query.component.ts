@@ -10,28 +10,12 @@ import { TableModule } from "primeng/table";
 import { catchError, take, tap, throwError } from "rxjs";
 import { ApiService } from "../../../api";
 import { SqlState } from "../sql.state";
-import { SqlQueryResult } from "../../../api/raw-types";
+import { NUMERIC_TYPES, SqlQueryResult } from "../../../api/raw-types";
 
 const LAST_QUERY = (tab: string) => `sql.last-query.${tab}`;
 
-const NUMERIC_TYPES = new Set([
-  "I8",
-  "U8",
-  "I16",
-  "U16",
-  "I32",
-  "U32",
-  "I64",
-  "U64",
-  "I128",
-  "U128",
-  "F32",
-  "F64",
-]);
-
 function algebraicTypeToColumn(type: any) {
-  if (NUMERIC_TYPES.has(Object.keys(type)[0])) return "numeric";
-
+  if (NUMERIC_TYPES.has(Object.keys(type)[0] as any)) return "numeric";
   return "text";
 }
 

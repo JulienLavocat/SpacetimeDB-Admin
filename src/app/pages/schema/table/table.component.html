@@ -1,0 +1,11 @@
+<p-card [header]="table().name" class="block" styleClass="bg-emphasis!">
+  <ol class="bg-emphasis">
+    @for (
+      column of schema().typespace.types[table().product_type_ref].Product!
+        .elements;
+      track $index
+    ) {
+      <li>- {{ showColumn(column) }}</li>
+    }
+  </ol>
+</p-card>

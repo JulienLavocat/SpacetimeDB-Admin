@@ -13,24 +13,8 @@ import {
 import { InputGroupModule } from "primeng/inputgroup";
 import { InputTextModule } from "primeng/inputtext";
 import { InputGroupAddonModule } from "primeng/inputgroupaddon";
-import { Reducer, StdbTypes } from "../../api";
-
-const PRIMITIVE_TYPES: Set<StdbTypes> = new Set([
-  "I8",
-  "U8",
-  "I16",
-  "U16",
-  "I32",
-  "U32",
-  "I64",
-  "U64",
-  "I128",
-  "U128",
-  "F32",
-  "F64",
-  "Bool",
-  "String",
-]);
+import { Reducer } from "../../api";
+import { PRIMITIVE_TYPES } from "../../api/raw-types";
 
 @Component({
   selector: "app-reducers",
@@ -64,8 +48,9 @@ export class ReducersComponent implements OnInit {
 
   isReducerDisabled(reducer: Reducer): boolean {
     return reducer.params.some((param) => {
-      if (param.type === "Array") return !PRIMITIVE_TYPES.has(param.arrayType!);
-      return !PRIMITIVE_TYPES.has(param.type);
+      if (param.type === "Array")
+        return !PRIMITIVE_TYPES.has(param.arrayType! as any);
+      return !PRIMITIVE_TYPES.has(param.type as any);
     });
   }
 }
