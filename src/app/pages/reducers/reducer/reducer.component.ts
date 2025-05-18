@@ -29,6 +29,7 @@ const NUMERIC_TYPES: Set<StdbTypes> = new Set([
 ]);
 
 function parseParamToValue(param: ReducerParam, value: string) {
+  if (param.type === "Bool") return !!value;
   if (!NUMERIC_TYPES.has(param.type)) return value;
   if (param.type.startsWith("F")) return parseFloat(value);
   return parseInt(value);
