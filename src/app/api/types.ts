@@ -14,13 +14,21 @@ export type StdbTypes =
   | "I128"
   | "U128"
   | "F128"
+  | "U256"
   | "Bool"
   | "String"
   | "Array"
-  | "Ref";
+  | "Ref"
+  | "Product";
 
 export type AlgebraicType = Record<StdbTypes, never[]> & {
   Array: Record<StdbTypes, never[]>;
+  Product: {
+    elements: {
+      name: string | RustOption<string>;
+      algebraic_type: AlgebraicType;
+    }[];
+  };
 };
 
 export interface RustOption<T> {
@@ -58,7 +66,7 @@ export interface Type {
 }
 
 export interface RawSchema {
-  tables: { name: string }[];
+  tables: { name: string; product_type_ref: number }[];
   reducers: RawReducer[];
   typespace: Typespace;
   types: Type[];

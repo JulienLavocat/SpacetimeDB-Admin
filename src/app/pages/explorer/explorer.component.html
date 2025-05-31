@@ -1,0 +1,56 @@
+@if (isLoading()) {
+  <p-progressSpinner></p-progressSpinner>
+} @else {
+  <div class="flex h-full">
+    <div class="flex flex-col max-w-fit p-2 gap-2">
+      @for (table of tables(); track table.name) {
+        <p-button
+          variant="text"
+          styleClass="w-full text-left justify-start!"
+          severity="contrast"
+          [label]="table.name"
+          (onClick)="openTable(table)"
+        ></p-button>
+      }
+    </div>
+    <p-divider layout="vertical"></p-divider>
+    <div class="flex flex-col grow h-full">
+      @if (tabs().length === 0) {
+        <p-message
+          severity="info"
+          text="No tables opened yet. Click on a table to open it."
+        ></p-message>
+      } @else {
+        <p-tabs
+          [value]="selectedTab()"
+          class="flex grow rounded-sm"
+          scrollable
+          lazy
+          (valueChange)="onTabChange($event)"
+        >
+          <p-tablist>
+            @for (tab of tabs(); track $index) {
+              <p-tab [value]="tab.id">
+                {{ tab.id }}
+                <p-button
+                  icon="pi pi-times"
+                  rounded
+                  text
+                  severity="danger"
+                  (onClick)="closeTab(tab.id)"
+                ></p-button>
+              </p-tab>
+            }
+          </p-tablist>
+          <p-tabpanels class="grow">
+            @for (tab of tabs(); track tab) {
+              <p-tabpanel [value]="tab.id" class="h-full">
+                <app-explorer-tab [table]="tab.table"></app-explorer-tab>
+              </p-tabpanel>
+            }
+          </p-tabpanels>
+        </p-tabs>
+      }
+    </div>
+  </div>
+}

@@ -33,6 +33,11 @@ export class LayoutComponent {
       icon: PrimeIcons.ALIGN_JUSTIFY,
     },
     {
+      routerLink: "/explorer",
+      label: "Explorer",
+      icon: PrimeIcons.FOLDER_OPEN,
+    },
+    {
       routerLink: "/sql",
       label: "SQL",
       icon: PrimeIcons.DATABASE,

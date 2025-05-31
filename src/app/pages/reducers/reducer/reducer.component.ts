@@ -8,7 +8,7 @@ import { CheckboxModule } from "primeng/checkbox";
 import { ChipModule } from "primeng/chip";
 import { TooltipModule } from "primeng/tooltip";
 import { take, tap } from "rxjs";
-import { ApiService, Reducer, ReducerParam, StdbTypes } from "../../../api";
+import { ApiService, Reducer, Param, StdbTypes } from "../../../api";
 
 const NUMERIC_TYPES: Set<StdbTypes> = new Set([
   "I8",
@@ -26,16 +26,17 @@ const NUMERIC_TYPES: Set<StdbTypes> = new Set([
   "I128",
   "U128",
   "F128",
+  "U256",
 ]);
 
-function parseParamToValue(param: ReducerParam, value: string) {
+function parseParamToValue(param: Param, value: string) {
   if (param.type === "Bool") return !!value;
   if (!NUMERIC_TYPES.has(param.type)) return value;
   if (param.type.startsWith("F")) return parseFloat(value);
   return parseInt(value);
 }
 
-function parseArrayParam(param: ReducerParam, value: string) {
+function parseArrayParam(param: Param, value: string) {
   if (!value || typeof value !== "string") return [];
 
   const regex = /"([^"]*)"|([^,]+)/g;
@@ -141,7 +142,7 @@ export class ReducerComponent implements OnInit {
     return "string";
   }
 
-  displayParam(param: ReducerParam) {
+  displayParam(param: Param) {
     if (param.type === "Array" && !this.disabled) return `${param.name}: `;
 
     if (param.type === "Array" && this.disabled)
@@ -154,7 +155,7 @@ export class ReducerComponent implements OnInit {
     return `${param.name}: ${param.type}`;
   }
 
-  getTooltip(param: ReducerParam) {
+  getTooltip(param: Param) {
     if (param.type === "Array") {
       return `Array of ${param.arrayType?.toLocaleLowerCase()}, separated by commas: 1,2,3 or "hello","world"`;
     }

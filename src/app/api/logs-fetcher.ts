@@ -55,10 +55,12 @@ function parseLogsChunk(chunk: Uint8Array, subject: Subject<LogLine[]>) {
     .split("\n")
     .map((element) => {
       if (element) {
-        const line = JSON.parse(element);
-        line.ts = new Date(line.ts / 1000);
-        line.level = line.level.toLowerCase();
-        lines.push(line);
+        try {
+          const line = JSON.parse(element);
+          line.ts = new Date(line.ts / 1000);
+          line.level = line.level.toLowerCase();
+          lines.push(line);
+        } catch (e) {}
       }
     });
   subject.next(lines);

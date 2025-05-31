@@ -22,4 +22,5 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: light-dark(var(--p-surface-0), var(--p-surface-950));
+  font-family: "Geist Mono";
 }

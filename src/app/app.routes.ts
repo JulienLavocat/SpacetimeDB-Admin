@@ -6,6 +6,7 @@ import { ReducersState } from "./pages/reducers/reducers.state";
 import { dbNotSetGuard } from "./utils/db-not-set.guard";
 import { SqlState } from "./pages/sql/sql.state";
 import { withStorageFeature } from "@ngxs/storage-plugin";
+import { ExplorerState } from "./pages/explorer/explorer.state";
 
 export const routes: Routes = [
   {
@@ -55,6 +56,15 @@ export const routes: Routes = [
         loadComponent: () =>
           import("./pages/reducers/reducers.component").then(
             (m) => m.ReducersComponent,
+          ),
+      },
+      {
+        path: "explorer",
+        canActivate: [dbNotSetGuard],
+        providers: [provideStates([ExplorerState])],
+        loadComponent: () =>
+          import("./pages/explorer/explorer.component").then(
+            (m) => m.ExplorerComponent,
           ),
       },
     ],
