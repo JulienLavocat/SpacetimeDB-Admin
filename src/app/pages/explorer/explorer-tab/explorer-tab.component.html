@@ -94,7 +94,13 @@
       <tr>
         @for (col of tableColumns; track col) {
           <th pResizableColumn [pSortableColumn]="col">
-            {{ col }} <p-sortIcon [field]="col" />
+            <div class="flex items-center gap-2">
+              @if (primaryKeys.includes($index)) {
+                <i class="pi pi-key text-yellow-400"></i>
+              }
+              <span>{{ col }}</span>
+              <p-sortIcon [field]="col" />
+            </div>
           </th>
         }
       </tr>

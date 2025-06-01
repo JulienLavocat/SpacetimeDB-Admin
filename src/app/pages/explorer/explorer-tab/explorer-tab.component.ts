@@ -37,6 +37,7 @@ export class ExplorerTabComponent implements OnInit, OnDestroy {
   rows: any[] = [];
   totalRows: number = 0;
   tableColumns!: string[];
+  primaryKeys!: number[];
   error?: string;
 
   // Paginator
@@ -59,6 +60,7 @@ export class ExplorerTabComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.tableColumns = this.table().columns.map((e) => e.name);
+    this.primaryKeys = this.table().primaryKey;
     this.queryTable();
   }
 

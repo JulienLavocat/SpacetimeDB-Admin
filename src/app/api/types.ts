@@ -66,7 +66,7 @@ export interface Type {
 }
 
 export interface RawSchema {
-  tables: { name: string; product_type_ref: number }[];
+  tables: { name: string; product_type_ref: number; primary_key: number[] }[];
   reducers: RawReducer[];
   typespace: Typespace;
   types: Type[];

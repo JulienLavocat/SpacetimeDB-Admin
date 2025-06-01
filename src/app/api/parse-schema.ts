@@ -5,7 +5,8 @@ export type ReducerLifecycle = "Init" | "OnDisconnect" | "OnConnect";
 export interface Table {
   name: string;
   columns: { name: string; type: string }[];
-  primary_key: {};
+  primaryKey: number[];
+  indexes: { name: string; accessorName: string | null; columns: number[] }[];
 }
 
 export interface Param {
@@ -52,7 +53,7 @@ export function parseSchema(schema: RawSchema): Schema {
       columns: type.Product.elements.map((col) =>
         parseAlgebraicType(schema, col.name, col.algebraic_type),
       ),
-      primary_key: {},
+      primaryKey: e.primary_key,
     };
   });
 
