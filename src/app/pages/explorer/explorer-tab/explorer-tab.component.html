@@ -85,6 +85,7 @@
     resizableColumns
     paginator
     paginatorStyleClass="hidden!"
+    sortMode="multiple"
     [first]="firstRow"
     [rows]="rowsPerPage"
     [loading]="autoRefreshTimer ? false : isLoading"
@@ -92,7 +93,9 @@
     <ng-template #header>
       <tr>
         @for (col of tableColumns; track col) {
-          <th pResizableColumn>{{ col }}</th>
+          <th pResizableColumn [pSortableColumn]="col">
+            {{ col }} <p-sortIcon [field]="col" />
+          </th>
         }
       </tr>
     </ng-template>

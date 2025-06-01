@@ -87,7 +87,11 @@ export class ExplorerTabComponent implements OnInit, OnDestroy {
           this.rows = result.rows;
           this.totalRows = result.rows.length;
           this.isLoading = false;
-          this.firstRow = 0;
+          if (this.firstRow >= this.totalRows) {
+            this.last();
+          } else if (this.firstRow <= 0) {
+            this.first();
+          }
           this.allSelected = this.rowsPerPage >= this.totalRows;
         }),
         catchError((error: any) => {

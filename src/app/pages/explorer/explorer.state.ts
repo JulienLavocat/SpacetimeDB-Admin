@@ -13,6 +13,7 @@ export interface ExplorerStateModel {
   tables: Table[];
   tabs: { id: string; table: Table }[];
   selectedTab: string;
+  tablesFilter: string;
 }
 
 @State<ExplorerStateModel>({
@@ -22,6 +23,7 @@ export interface ExplorerStateModel {
     tables: [],
     tabs: [],
     selectedTab: "",
+    tablesFilter: "",
   },
 })
 @Injectable()
@@ -35,7 +37,9 @@ export class ExplorerState {
 
   @Selector()
   public static tables(state: ExplorerStateModel): Table[] {
-    return state.tables;
+    return state.tables.filter((table) =>
+      table.name.toLowerCase().includes(state.tablesFilter.toLowerCase()),
+    );
   }
 
   @Selector()
@@ -53,7 +57,19 @@ export class ExplorerState {
     return this.api.getSchema().pipe(
       tap((schema) => {
         ctx.patchState({
-          tables: schema.tables,
+          tables: [
+            ...schema.tables,
+            ...schema.tables,
+            ...schema.tables,
+            ...schema.tables,
+            ...schema.tables,
+            ...schema.tables,
+            ...schema.tables,
+            ...schema.tables,
+            ...schema.tables,
+            ...schema.tables,
+            ...schema.tables,
+          ],
           isLoading: false,
         });
       }),

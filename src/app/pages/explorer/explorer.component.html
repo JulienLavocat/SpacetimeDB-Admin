@@ -2,7 +2,7 @@
   <p-progressSpinner></p-progressSpinner>
 } @else {
   <div class="flex h-full">
-    <div class="flex flex-col max-w-fit p-2 gap-2">
+    <div class="flex flex-col max-w-fit p-2 gap-2 max-h-full overflow-y-auto">
       @for (table of tables(); track table.name) {
         <p-button
           variant="text"
@@ -10,16 +10,15 @@
           severity="contrast"
           [label]="table.name"
           (onClick)="openTable(table)"
-        ></p-button>
+        />
       }
     </div>
-    <p-divider layout="vertical"></p-divider>
     <div class="flex flex-col grow h-full">
       @if (tabs().length === 0) {
         <p-message
           severity="info"
           text="No tables opened yet. Click on a table to open it."
-        ></p-message>
+        />
       } @else {
         <p-tabs
           [value]="selectedTab()"
@@ -31,7 +30,7 @@
           <p-tablist>
             @for (tab of tabs(); track $index) {
               <p-tab [value]="tab.id">
-                {{ tab.id }}
+                <span class="pl-2">{{ tab.id }}</span>
                 <p-button
                   icon="pi pi-times"
                   rounded
