@@ -57,19 +57,7 @@ export class ExplorerState {
     return this.api.getSchema().pipe(
       tap((schema) => {
         ctx.patchState({
-          tables: [
-            ...schema.tables,
-            ...schema.tables,
-            ...schema.tables,
-            ...schema.tables,
-            ...schema.tables,
-            ...schema.tables,
-            ...schema.tables,
-            ...schema.tables,
-            ...schema.tables,
-            ...schema.tables,
-            ...schema.tables,
-          ],
+          tables: schema.tables,
           isLoading: false,
         });
       }),
