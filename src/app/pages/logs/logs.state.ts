@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { append, patch } from "@ngxs/store/operators";
 import { EMPTY } from "rxjs";
-import { LogLine } from "../../api/types";
+import { LogLine } from "../../api";
 
 export class AppendLogLine {
   static type = "[Logs] Append Lines";

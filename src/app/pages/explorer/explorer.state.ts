@@ -54,7 +54,7 @@ export class ExplorerState {
 
   @Action(LoadExplorerSchema)
   loadExplorerSchema(ctx: StateContext<ExplorerStateModel>) {
-    return this.api.getSchema().pipe(
+    return this.api.getRawSchema().pipe(
       tap((schema) => {
         ctx.patchState({
           tables: schema.tables,

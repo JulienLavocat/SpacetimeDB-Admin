@@ -1,4 +1,11 @@
-import { Component, inject, input, OnDestroy, OnInit } from "@angular/core";
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+} from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { InputTextModule } from "primeng/inputtext";
 import { InputGroupModule } from "primeng/inputgroup";
@@ -10,6 +17,8 @@ import { DividerModule } from "primeng/divider";
 import { catchError, of, take, tap } from "rxjs";
 import { MessageModule } from "primeng/message";
 import { SelectChangeEvent, SelectModule } from "primeng/select";
+import { Store } from "@ngxs/store";
+import { SchemaState } from "../../schema/schema.state";
 
 @Component({
   selector: "app-explorer-tab",
@@ -29,8 +38,19 @@ import { SelectChangeEvent, SelectModule } from "primeng/select";
 })
 export class ExplorerTabComponent implements OnInit, OnDestroy {
   private readonly apiService = inject(ApiService);
+  private readonly store = inject(Store);
 
   readonly table = input.required<Table>();
+  readonly schema = this.store.selectSignal(SchemaState.selectSchema);
+  readonly tableColumns = computed(() => {
+    const schema = this.schema();
+    if (!schema) return [];
+
+    const table = this.table();
+    const productType = schema.types[table.product_type_ref];
+    const type = schema.typespace.types[productType.ty];
+    return type.fields.map((field) => field.name);
+  });
 
   isLoading: boolean = true;
   whereClause: string = "";

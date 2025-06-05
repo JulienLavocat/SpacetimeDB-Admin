@@ -10,7 +10,7 @@ import { TableModule } from "primeng/table";
 import { catchError, take, tap, throwError } from "rxjs";
 import { ApiService } from "../../../api";
 import { SqlState } from "../sql.state";
-import { SqlQueryResult } from "../../../api/raw-types";
+import { SqlQueryResult } from "../../../api/rawmoduledef9";
 
 const LAST_QUERY = (tab: string) => `sql.last-query.${tab}`;
 

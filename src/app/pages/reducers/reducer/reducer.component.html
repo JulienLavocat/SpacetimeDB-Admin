@@ -2,30 +2,27 @@
   <form class="flex justify-between items-center" [formGroup]="form">
     <div class="flex items-center gap-2 reducer">
       <p class="flex items-center">
-        {{ reducer.name }}
+        {{ reducer().name }}
         <span>(</span>
-        @for (param of reducer.params; track $index) {
+        @for (param of parsedParams(); track $index) {
           <div [ngClass]="{ 'mr-1': !$last }">
             <span>{{ displayParam(param) }}</span>
             @if (!disabled) {
-              @if (param.type === "Bool") {
+              @if (param.type.isBoolean) {
                 <p-checkBox
                   [formControlName]="param.name"
                   binary
-                  [pTooltip]="getTooltip(param)"
+                  [pTooltip]="getTooltip(param.type)"
                   tooltipPosition="bottom"
                 />
               } @else {
                 <input
                   class="reducer-input"
                   [type]="getReducerType(param.type)"
-                  [pTooltip]="getTooltip(param)"
+                  [pTooltip]="getTooltip(param.type)"
                   tooltipPosition="bottom"
                   [formControlName]="param.name"
-                  [placeholder]="
-                    (param.arrayType ? param.arrayType + '[]' : param.type)
-                      | lowercase
-                  "
+                  [placeholder]="param.type"
                 />
               }
             }
@@ -37,9 +34,9 @@
         <span>)</span>
       </p>
     </div>
-    @if (reducer.lifecycle) {
+    @if (reducer().lifecycle.some) {
       <p-chip
-        [label]="reducer.lifecycle"
+        [label]="getLifecycle()"
         pTooltip="This reducer is bound to a lifecycle event and can't be called manually"
       />
     } @else {
@@ -47,7 +44,7 @@
         [loading]="isLoading"
         [disabled]="disabled"
         [pTooltip]="
-          disabled
+          disabled()
             ? 'This reducer is using custom types which are not yet supported'
             : 'Call reducer'
         "

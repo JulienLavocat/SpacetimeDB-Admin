@@ -64,7 +64,7 @@ export class SqlState {
   @Action(LoadSqlSchema)
   loadSqlSchema(ctx: StateContext<SqlStateModel>) {
     ctx.patchState({ isLoading: true });
-    return this.api.getSchema().pipe(
+    return this.api.getRawSchema().pipe(
       tap((schema) => {
         ctx.patchState({ isLoading: false, tables: schema.tables });
       }),

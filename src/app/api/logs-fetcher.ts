@@ -1,5 +1,5 @@
 import { Subject } from "rxjs";
-import { LogLine } from "./types";
+import { LogLine } from "./rawmoduledef9";
 
 export function streamLogs(
   instanceUrl: string,

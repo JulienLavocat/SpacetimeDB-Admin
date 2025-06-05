@@ -1,4 +1,3 @@
-import { AsyncPipe } from "@angular/common";
 import { Component, inject, OnInit } from "@angular/core";
 import { Store } from "@ngxs/store";
 import { ButtonModule } from "primeng/button";
@@ -13,29 +12,11 @@ import {
 import { InputGroupModule } from "primeng/inputgroup";
 import { InputTextModule } from "primeng/inputtext";
 import { InputGroupAddonModule } from "primeng/inputgroupaddon";
-import { Reducer, StdbTypes } from "../../api";
-
-const PRIMITIVE_TYPES: Set<StdbTypes> = new Set([
-  "I8",
-  "U8",
-  "I16",
-  "U16",
-  "I32",
-  "U32",
-  "I64",
-  "U64",
-  "I128",
-  "U128",
-  "F32",
-  "F64",
-  "Bool",
-  "String",
-]);
+import { ParsedType, Reducer } from "../../api";
 
 @Component({
   selector: "app-reducers",
   imports: [
-    AsyncPipe,
     ProgressSpinnerModule,
     CardModule,
     ButtonModule,
@@ -50,7 +31,9 @@ const PRIMITIVE_TYPES: Set<StdbTypes> = new Set([
 export class ReducersComponent implements OnInit {
   private readonly store = inject(Store);
 
-  data$ = this.store.select(ReducersState.selectData);
+  isLoading = this.store.selectSignal(ReducersState.isLoading);
+  reducers = this.store.selectSignal(ReducersState.reducers);
+  schema = this.store.selectSignal(ReducersState.schema);
 
   ngOnInit(): void {
     this.store.dispatch(new LoadReducersAction());
@@ -63,9 +46,13 @@ export class ReducersComponent implements OnInit {
   }
 
   isReducerDisabled(reducer: Reducer): boolean {
-    return reducer.params.some((param) => {
-      if (param.type === "Array") return !PRIMITIVE_TYPES.has(param.arrayType!);
-      return !PRIMITIVE_TYPES.has(param.type);
-    });
+    return reducer.params.elements
+      .map((param) =>
+        ParsedType.fromAlgebraicType(this.schema()!, param.algebraic_type),
+      )
+      .some((param) => {
+        if (param.isArray) return param.valueType?.isPrimitive ?? false;
+        return param.isPrimitive;
+      });
   }
 }

@@ -1,25 +1,19 @@
-@if (data$ | async; as data) {
-  @if (data.isLoading) {
-    <p-progress-spinner></p-progress-spinner>
-  } @else {
-    <p-inputgroup styleClass="mb-4">
-      <p-inputgroup-addon>
-        <i class="pi pi-search"></i>
-      </p-inputgroup-addon>
-      <input
-        pInputText
-        placeholder="Search reducers"
-        (input)="filter($event)"
-      />
-    </p-inputgroup>
+@if (isLoading()) {
+  <p-progress-spinner></p-progress-spinner>
+} @else {
+  <p-inputgroup styleClass="mb-4">
+    <p-inputgroup-addon>
+      <i class="pi pi-search"></i>
+    </p-inputgroup-addon>
+    <input pInputText placeholder="Search reducers" (input)="filter($event)" />
+  </p-inputgroup>
 
-    <div class="grow flex flex-col gap-2">
-      @for (reducer of data.reducers; track $index) {
-        <app-reducer
-          [reducer]="reducer"
-          [disabled]="isReducerDisabled(reducer)"
-        />
-      }
-    </div>
-  }
+  <div class="grow flex flex-col gap-2">
+    @for (reducer of reducers(); track $index) {
+      <app-reducer
+        [reducer]="reducer"
+        [disabled]="isReducerDisabled(reducer)"
+      />
+    }
+  </div>
 }

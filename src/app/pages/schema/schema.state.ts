@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { tap } from "rxjs";
-import { RawModuleRef9 } from "../../api/raw-types";
+import { RawModuleRef9 } from "../../api/rawmoduledef9";
 import { ApiService } from "../../api/api.service";
 import { LoadSchema } from "./schema.actions";
 
