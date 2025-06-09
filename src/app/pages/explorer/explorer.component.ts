@@ -3,6 +3,7 @@ import { Store } from "@ngxs/store";
 import { ExplorerState } from "./explorer.state";
 import {
   CloseExplorerTab,
+  FilterExplorerTables,
   LoadExplorerSchema,
   OpenExplorerTable,
 } from "./explorer.actions";
@@ -14,6 +15,7 @@ import { TabsModule } from "primeng/tabs";
 import { ExplorerTabComponent } from "./explorer-tab/explorer-tab.component";
 import { MessageModule } from "primeng/message";
 import { SplitterModule } from "primeng/splitter";
+import { InputTextModule } from "primeng/inputtext";
 
 @Component({
   selector: "app-explorer",
@@ -25,6 +27,7 @@ import { SplitterModule } from "primeng/splitter";
     ExplorerTabComponent,
     MessageModule,
     SplitterModule,
+    InputTextModule,
   ],
   templateUrl: "./explorer.component.html",
   styleUrl: "./explorer.component.scss",
@@ -51,5 +54,11 @@ export class ExplorerComponent implements OnInit {
 
   onTabChange(event: string | number): void {
     console.log("Tab changed to index:", event);
+  }
+
+  onFilterTablesChange(event: Event): void {
+    const target = event.target as any;
+    const value = target?.value;
+    this.store.dispatch(new FilterExplorerTables(value));
   }
 }

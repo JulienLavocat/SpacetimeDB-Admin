@@ -4,6 +4,11 @@ export class LoadExplorerSchema {
   static readonly type = "[Explorer] Load Schema";
 }
 
+export class FilterExplorerTables {
+  static readonly type = "[Explorer] Filter Tables";
+  constructor(public filter: string) {}
+}
+
 export class OpenExplorerTable {
   static readonly type = "[Explorer] Select Table";
 

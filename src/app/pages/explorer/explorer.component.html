@@ -3,7 +3,13 @@
 } @else {
   <p-splitter styleClass="h-full" [panelSizes]="[20, 80]">
     <ng-template #panel>
-      <div class="gap-2 max-h-full overflow-y-auto">
+      <div class="max-h-full overflow-y-auto">
+        <input
+          (input)="onFilterTablesChange($event)"
+          pInputText
+          placeholder="Filter tables"
+          class="w-full"
+        />
         @for (table of tables(); track table.name) {
           <p-button
             variant="text"

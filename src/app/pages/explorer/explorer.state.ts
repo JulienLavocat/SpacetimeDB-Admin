@@ -1,6 +1,7 @@
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import {
   CloseExplorerTab,
+  FilterExplorerTables,
   LoadExplorerSchema,
   OpenExplorerTable,
 } from "./explorer.actions";
@@ -62,6 +63,16 @@ export class ExplorerState {
         });
       }),
     );
+  }
+
+  @Action(FilterExplorerTables)
+  filterExplorerTables(
+    ctx: StateContext<ExplorerStateModel>,
+    action: FilterExplorerTables,
+  ) {
+    ctx.patchState({
+      tablesFilter: action.filter,
+    });
   }
 
   @Action(OpenExplorerTable)
