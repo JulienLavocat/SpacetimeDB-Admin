@@ -1,28 +1,33 @@
 @if (isLoading()) {
   <p-progressSpinner></p-progressSpinner>
 } @else {
-  <div class="flex h-full">
-    <div class="flex flex-col max-w-fit p-2 gap-2 max-h-full overflow-y-auto">
-      @for (table of tables(); track table.name) {
-        <p-button
-          variant="text"
-          styleClass="w-full text-left justify-start!"
-          severity="contrast"
-          [label]="table.name"
-          (onClick)="openTable(table)"
-        />
-      }
-    </div>
-    <div class="flex flex-col grow h-full">
+  <p-splitter styleClass="h-full" [panelSizes]="[20, 80]">
+    <ng-template #panel>
+      <div class="gap-2 max-h-full overflow-y-auto">
+        @for (table of tables(); track table.name) {
+          <p-button
+            variant="text"
+            styleClass="w-full text-left justify-start! mb-1"
+            severity="contrast"
+            [label]="table.name"
+            (onClick)="openTable(table)"
+          />
+        }
+      </div>
+    </ng-template>
+    <ng-template #panel>
       @if (tabs().length === 0) {
-        <p-message
-          severity="info"
-          text="No tables opened yet. Click on a table to open it."
-        />
+        <div class="flex flex-col grow h-full">
+          <p-message
+            styleClass="m-4"
+            severity="info"
+            text="No tables opened yet. Click on a table to open it."
+          />
+        </div>
       } @else {
         <p-tabs
           [value]="selectedTab()"
-          class="flex grow rounded-sm"
+          class="flex grow rounded-sm max-w-full"
           scrollable
           lazy
           (valueChange)="onTabChange($event)"
@@ -50,6 +55,6 @@
           </p-tabpanels>
         </p-tabs>
       }
-    </div>
-  </div>
+    </ng-template>
+  </p-splitter>
 }

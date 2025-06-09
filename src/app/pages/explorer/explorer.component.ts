@@ -13,6 +13,7 @@ import { Table } from "../../api";
 import { TabsModule } from "primeng/tabs";
 import { ExplorerTabComponent } from "./explorer-tab/explorer-tab.component";
 import { MessageModule } from "primeng/message";
+import { SplitterModule } from "primeng/splitter";
 
 @Component({
   selector: "app-explorer",
@@ -23,6 +24,7 @@ import { MessageModule } from "primeng/message";
     TabsModule,
     ExplorerTabComponent,
     MessageModule,
+    SplitterModule,
   ],
   templateUrl: "./explorer.component.html",
   styleUrl: "./explorer.component.scss",
