@@ -150,6 +150,8 @@ export class ReducerComponent implements OnInit {
 
     if (param.type === "Ref") return `${param.name}: ${param.refType?.name}`;
 
+    if (param.type === "Product") return `${param.name}: ${param.productType}`;
+
     if (!this.disabled) return `${param.name}: `;
 
     return `${param.name}: ${param.type}`;
