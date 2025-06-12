@@ -10,6 +10,7 @@ import { DividerModule } from "primeng/divider";
 import { catchError, of, take, tap } from "rxjs";
 import { MessageModule } from "primeng/message";
 import { SelectChangeEvent, SelectModule } from "primeng/select";
+import { algebraicTypeToColumn, parseRows } from "../../../api/sql.parser";
 
 @Component({
   selector: "app-explorer-tab",
@@ -35,6 +36,7 @@ export class ExplorerTabComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
   whereClause: string = "";
   rows: any[] = [];
+  columns: { name: string; type: string }[] = [];
   totalRows: number = 0;
   tableColumns!: string[];
   error?: string;
@@ -84,7 +86,11 @@ export class ExplorerTabComponent implements OnInit, OnDestroy {
         take(1),
         tap((results) => {
           const result = results[0];
-          this.rows = result.rows;
+          this.rows = parseRows(result.rows, result.schema.elements);
+          this.columns = result.schema.elements.map((e) => ({
+            name: e.name.some,
+            type: algebraicTypeToColumn(e.algebraic_type),
+          }));
           this.totalRows = result.rows.length;
           this.isLoading = false;
           if (this.firstRow >= this.totalRows) {

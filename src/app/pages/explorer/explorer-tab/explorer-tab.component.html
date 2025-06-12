@@ -98,17 +98,27 @@
   >
     <ng-template #header>
       <tr>
-        @for (col of tableColumns; track col) {
-          <th pResizableColumn [pSortableColumn]="col">
-            {{ col }} <p-sortIcon [field]="col" />
+        @for (col of columns; track $index) {
+          <th [pSortableColumn]="col.name">
+            <div class="flex items-center justify-between">
+              <span class="flex gap-1.5 items-center">
+                {{ col.name }} <p-sortIcon [field]="col.name" />
+              </span>
+              <p-columnFilter
+                [type]="col.type"
+                [field]="col.name"
+                display="menu"
+              />
+            </div>
           </th>
         }
       </tr>
     </ng-template>
-    <ng-template #body let-row>
+
+    <ng-template #body let-rowData>
       <tr>
-        @for (col of row; track $index) {
-          <td>{{ col }}</td>
+        @for (col of columns; track col) {
+          <td>{{ rowData[col.name] }}</td>
         }
       </tr>
     </ng-template>
