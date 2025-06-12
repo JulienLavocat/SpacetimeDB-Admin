@@ -69,11 +69,17 @@
         (keypress)="onWhereClauseChange($event)"
       />
     </p-input-group>
-    <p-select
-      [options]="availableIntervals"
-      optionLabel="name"
-      (onChange)="onAutoRefreshChange($event)"
-    />
+    <p-input-group styleClass="max-w-max">
+      <p-inputgroup-addon
+        ><span class="pi pi-stopwatch"></span
+      ></p-inputgroup-addon>
+      <p-select
+        [options]="availableIntervals"
+        appendTo="body"
+        optionLabel="name"
+        (onChange)="onAutoRefreshChange($event)"
+      />
+    </p-input-group>
   </div>
   <p-table
     [value]="rows"
