@@ -99,7 +99,7 @@
     <ng-template #header>
       <tr>
         @for (col of columns; track $index) {
-          <th [pSortableColumn]="col.name">
+          <th [pSortableColumn]="col.name" pResizableColumn>
             <div class="flex items-center justify-between">
               <span class="flex gap-1.5 items-center">
                 {{ col.name }} <p-sortIcon [field]="col.name" />
