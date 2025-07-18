@@ -1,3 +1,1 @@
-export const environment = {
-  enableSentry: true,
-};
+export const environment = {};
