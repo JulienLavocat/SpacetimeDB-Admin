@@ -1,10 +1,8 @@
-import { Action, NgxsOnInit, Selector, State, StateContext } from "@ngxs/store";
+import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { inject, Injectable } from "@angular/core";
 import { ApiService } from "./api";
 import { MessageService } from "primeng/api";
 import { EMPTY, tap } from "rxjs";
-
-const DB_DATA = "stdb-db-data";
 
 export class SetDatabaseInfo {
   static type = "[App] Set Database Info";
@@ -17,7 +15,7 @@ export class SetDatabaseInfo {
 }
 
 export class TestDatabaseConnectionAction {
-  static type = "[App]";
+  static type = "[App] Test Database Connection";
 
   constructor(
     public instanceUrl: string,
@@ -55,9 +53,10 @@ export class AppState {
     return { url: state.instanceUrl, db: state.database, token: state.token };
   }
 
+  /** URL + database required; token optional (anonymous). */
   @Selector()
   static selectHasCredentialsSet(state: AppStateModel) {
-    return !!state.instanceUrl && !!state.token && !!state.database;
+    return !!state.instanceUrl && !!state.database;
   }
 
   @Action(TestDatabaseConnectionAction)
@@ -80,6 +79,9 @@ export class AppState {
           this.toast.add({
             severity: "success",
             summary: "Connection to SpacetimeDB established",
+            detail: action.token
+              ? undefined
+              : "Connected anonymously (no token)",
           });
         }),
       );
@@ -90,7 +92,7 @@ export class AppState {
     ctx.patchState({
       instanceUrl: action.instanceUrl,
       database: action.database,
-      token: action.token,
+      token: action.token ?? "",
     });
     return EMPTY;
   }

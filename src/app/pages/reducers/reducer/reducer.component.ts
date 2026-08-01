@@ -1,54 +1,19 @@
-import { LowerCasePipe, NgClass } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { Component, inject, Input, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
-import { CheckboxModule } from "primeng/checkbox";
 import { ChipModule } from "primeng/chip";
 import { TooltipModule } from "primeng/tooltip";
 import { take, tap } from "rxjs";
-import { ApiService, Reducer, Param, StdbTypes } from "../../../api";
-
-const NUMERIC_TYPES: Set<StdbTypes> = new Set([
-  "I8",
-  "U8",
-  "F8",
-  "I16",
-  "U16",
-  "F16",
-  "I32",
-  "U32",
-  "F32",
-  "I64",
-  "U64",
-  "F64",
-  "I128",
-  "U128",
-  "F128",
-  "U256",
-]);
-
-function parseParamToValue(param: Param, value: string) {
-  if (param.type === "Bool") return !!value;
-  if (!NUMERIC_TYPES.has(param.type)) return value;
-  if (param.type.startsWith("F")) return parseFloat(value);
-  return parseInt(value);
-}
-
-function parseArrayParam(param: Param, value: string) {
-  if (!value || typeof value !== "string") return [];
-
-  const regex = /"([^"]*)"|([^,]+)/g;
-  const result: string[] = [];
-  let match;
-
-  while ((match = regex.exec(value)) !== null) {
-    result.push(match[1] ?? match[2]); // Extract quoted text or regular value
-  }
-
-  return result.map((v: string) => parseParamToValue(param, v));
-}
+import {
+  ApiService,
+  encodeReducerArgs,
+  Reducer,
+  typeLabel,
+} from "../../../api";
+import { TypeFieldComponent } from "../type-field/type-field.component";
 
 @Component({
   selector: "app-reducer",
@@ -59,15 +24,13 @@ function parseArrayParam(param: Param, value: string) {
     ChipModule,
     ReactiveFormsModule,
     TooltipModule,
-    CheckboxModule,
-    LowerCasePipe,
+    TypeFieldComponent,
   ],
   templateUrl: "./reducer.component.html",
   styleUrl: "./reducer.component.css",
 })
 export class ReducerComponent implements OnInit {
   @Input("reducer") reducer!: Reducer;
-  @Input("disabled") disabled!: boolean;
 
   private readonly api = inject(ApiService);
   private readonly toast = inject(MessageService);
@@ -75,6 +38,7 @@ export class ReducerComponent implements OnInit {
 
   isLoading = false;
   form: FormGroup = this.fb.group({});
+  typeLabel = typeLabel;
 
   ngOnInit(): void {
     this.form = this.fb.group(
@@ -85,22 +49,7 @@ export class ReducerComponent implements OnInit {
   }
 
   call() {
-    // Arguments must be in the order defined by the reducer
-    const args = this.reducer.params.map((param) => {
-      const value = this.form.value[param.name];
-      return param.type === "Array"
-        ? parseArrayParam(param, value)
-        : parseParamToValue(param, value);
-    });
-
-    console.log(
-      "Calling reducer",
-      this.reducer.name,
-      "with args",
-      args,
-      "from form",
-      this.form.value,
-    );
+    const args = encodeReducerArgs(this.reducer.params, this.form.value);
 
     this.isLoading = true;
     this.api
@@ -130,37 +79,7 @@ export class ReducerComponent implements OnInit {
       .subscribe();
   }
 
-  getReducerType(type: StdbTypes) {
-    if (NUMERIC_TYPES.has(type)) {
-      return "number";
-    }
-
-    if (type === "Bool") {
-      return "checkbox";
-    }
-
-    return "string";
-  }
-
-  displayParam(param: Param) {
-    if (param.type === "Array" && !this.disabled) return `${param.name}: `;
-
-    if (param.type === "Array" && this.disabled)
-      return `${param.name}: ${param.arrayType}[]`;
-
-    if (param.type === "Ref") return `${param.name}: ${param.refType?.name}`;
-
-    if (param.type === "Product") return `${param.name}: ${param.productType}`;
-
-    if (!this.disabled) return `${param.name}: `;
-
-    return `${param.name}: ${param.type}`;
-  }
-
-  getTooltip(param: Param) {
-    if (param.type === "Array") {
-      return `Array of ${param.arrayType?.toLocaleLowerCase()}, separated by commas: 1,2,3 or "hello","world"`;
-    }
-    return param.type.toLocaleLowerCase();
+  displayParamName(param: { name: string; resolved: any }) {
+    return `${param.name}: ${typeLabel(param.resolved)}`;
   }
 }

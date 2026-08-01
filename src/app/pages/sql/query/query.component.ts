@@ -144,8 +144,8 @@ export class QueryComponent implements OnInit {
           this.parseTime = parseTime;
           this.queryTime = queryTime + parseTime;
           this.error = "";
-          this.columns = columns.map((e) => ({
-            name: e.name.some,
+          this.columns = columns.map((e, i) => ({
+            name: e.name?.some ?? `col_${i}`,
             type: algebraicTypeToColumn(e.algebraic_type),
           }));
           this.rowsCount = data.rows.length;

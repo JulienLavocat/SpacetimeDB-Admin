@@ -7,6 +7,7 @@ import { dbNotSetGuard } from "./utils/db-not-set.guard";
 import { SqlState } from "./pages/sql/sql.state";
 import { withStorageFeature } from "@ngxs/storage-plugin";
 import { ExplorerState } from "./pages/explorer/explorer.state";
+import { ViewsState } from "./pages/views/views.state";
 
 export const routes: Routes = [
   {
@@ -66,6 +67,13 @@ export const routes: Routes = [
           import("./pages/explorer/explorer.component").then(
             (m) => m.ExplorerComponent,
           ),
+      },
+      {
+        path: "views",
+        canActivate: [dbNotSetGuard],
+        providers: [provideStates([ViewsState])],
+        loadComponent: () =>
+          import("./pages/views/views.component").then((m) => m.ViewsComponent),
       },
     ],
   },

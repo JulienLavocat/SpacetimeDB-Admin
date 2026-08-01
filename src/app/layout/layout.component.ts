@@ -38,6 +38,11 @@ export class LayoutComponent {
       icon: PrimeIcons.FOLDER_OPEN,
     },
     {
+      routerLink: "/views",
+      label: "Views",
+      icon: PrimeIcons.EYE,
+    },
+    {
       routerLink: "/sql",
       label: "SQL",
       icon: PrimeIcons.DATABASE,

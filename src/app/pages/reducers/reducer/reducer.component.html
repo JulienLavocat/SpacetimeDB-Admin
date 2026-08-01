@@ -1,34 +1,16 @@
 <p-card styleClass="flex">
-  <form class="flex justify-between items-center" [formGroup]="form">
-    <div class="flex items-center gap-2 reducer">
-      <p class="flex items-center">
-        {{ reducer.name }}
+  <form class="flex justify-between items-center gap-3" [formGroup]="form">
+    <div class="flex items-center gap-2 reducer flex-wrap">
+      <p class="flex items-center flex-wrap gap-y-1">
+        <span class="font-medium">{{ reducer.name }}</span>
         <span>(</span>
         @for (param of reducer.params; track $index) {
-          <div [ngClass]="{ 'mr-1': !$last }">
-            <span>{{ displayParam(param) }}</span>
-            @if (!disabled) {
-              @if (param.type === "Bool") {
-                <p-checkBox
-                  [formControlName]="param.name"
-                  binary
-                  [pTooltip]="getTooltip(param)"
-                  tooltipPosition="bottom"
-                />
-              } @else {
-                <input
-                  class="reducer-input"
-                  [type]="getReducerType(param.type)"
-                  [pTooltip]="getTooltip(param)"
-                  tooltipPosition="bottom"
-                  [formControlName]="param.name"
-                  [placeholder]="
-                    (param.arrayType ? param.arrayType + '[]' : param.type)
-                      | lowercase
-                  "
-                />
-              }
-            }
+          <div class="param-block" [ngClass]="{ 'mr-1': !$last }">
+            <span class="param-label">{{ param.name }}:</span>
+            <app-type-field
+              [type]="param.resolved"
+              [formControlName]="param.name"
+            />
             @if (!$last) {
               <span>,</span>
             }
@@ -45,12 +27,7 @@
     } @else {
       <p-button
         [loading]="isLoading"
-        [disabled]="disabled"
-        [pTooltip]="
-          disabled
-            ? 'This reducer is using custom types which are not yet supported'
-            : 'Call reducer'
-        "
+        pTooltip="Call reducer"
         icon="pi pi-play"
         variant="outlined"
         (click)="call()"

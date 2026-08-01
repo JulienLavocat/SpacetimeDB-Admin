@@ -47,21 +47,26 @@ export function parseRows(
   return rows.map((row) =>
     row.reduce((acc, next, nextIndex) => {
       const type = typeRegistry[nextIndex];
+      const colName =
+        columns[nextIndex].name?.some ??
+        (columns[nextIndex].name as unknown as string) ??
+        `col_${nextIndex}`;
 
       switch (type) {
         case "enum":
-          acc[columns[nextIndex].name.some] =
-            columns[nextIndex].algebraic_type.Sum?.variants[next[0]].name.some;
+          acc[colName] =
+            columns[nextIndex].algebraic_type.Sum?.variants[next[0]].name
+              ?.some;
           return acc;
 
         case "option":
-          acc[columns[nextIndex].name.some] = next[0] === 1 ? "" : next[1]; // if none ? none : some
+          acc[colName] = next[0] === 1 ? "" : next[1]; // if none ? none : some
           return acc;
 
         case "raw":
-          acc[columns[nextIndex].name.some] = next;
+          acc[colName] = next;
           return acc;
       }
-    }, {}),
+    }, {} as Record<string, unknown>),
   );
 }

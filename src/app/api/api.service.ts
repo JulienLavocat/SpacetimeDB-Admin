@@ -1,11 +1,11 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Store } from "@ngxs/store";
 import { catchError, map, Observable, of } from "rxjs";
 import { AppState } from "../app.state";
 import { streamLogs } from "./logs-fetcher";
 import { LogLine, RawSchema, ReducerCallResult } from "./types";
-import { parseSchema } from "./parse-schema";
+import { parseSchema, Schema } from "./parse-schema";
 import { RawModuleRef9, SqlQueryResult } from "./raw-types";
 
 @Injectable()
@@ -13,22 +13,33 @@ export class ApiService {
   private store = inject(Store);
   private http = inject(HttpClient);
 
+  /**
+   * Probe connectivity with a non-privileged endpoint so any identity
+   * (including anonymous / non-owner) can succeed.
+   * Logs require ownership and must not be used for connection tests.
+   */
   testConnection(
     url: string,
     database: string,
     token: string,
   ): Observable<{ error?: string }> {
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers["Authorization"] = "Bearer " + token;
+    }
+
     return this.http
-      .get(`${url}/v1/database/${database}/logs?num_lines=1`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
+      .get(`${url}/v1/database/${database}/schema?version=9`, { headers })
       .pipe(
         map(() => ({ error: undefined })),
-        catchError((err) => {
-          console.log(err.error);
-          return of({ error: err.error });
+        catchError((err: HttpErrorResponse) => {
+          const detail =
+            typeof err.error === "string"
+              ? err.error
+              : err.error
+                ? JSON.stringify(err.error)
+                : err.message || "Connection failed";
+          return of({ error: detail });
         }),
       );
   }
@@ -41,7 +52,7 @@ export class ApiService {
     return this.getDb<RawModuleRef9>("schema?version=9");
   }
 
-  getSchema() {
+  getSchema(): Observable<Schema> {
     return this.getDb<RawSchema>("schema?version=9").pipe(
       map((schema) => parseSchema(schema)),
     );
@@ -51,11 +62,18 @@ export class ApiService {
     return this.postDb(`call/${name}`, args).pipe(
       map((res) => {
         const result: ReducerCallResult = { error: undefined, data: res };
-        console.log(res);
         return result;
       }),
       catchError((err) => {
-        const res: ReducerCallResult = { error: err.error, data: undefined };
+        const res: ReducerCallResult = {
+          error:
+            typeof err.error === "string"
+              ? err.error
+              : err.error
+                ? JSON.stringify(err.error)
+                : err.message,
+          data: undefined,
+        };
         return of(res);
       }),
     );

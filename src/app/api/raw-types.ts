@@ -1,6 +1,6 @@
 export interface Option<T> {
   some?: T;
-  none?: void;
+  none?: void | unknown[];
 }
 
 export interface SumTypeVariant {
@@ -13,7 +13,7 @@ export interface SumType {
 }
 
 export interface ProductTypeElement {
-  name: { some: string };
+  name: Option<string>;
   algebraic_type: AlgebraicType;
 }
 
@@ -21,38 +21,40 @@ export interface ProductType {
   elements: ProductTypeElement[];
 }
 
-export type BuiltinType =
-  | { Bool: void }
-  | { I8: void }
-  | { U8: void }
-  | { F8: void }
-  | { I16: void }
-  | { U16: void }
-  | { F16: void }
-  | { I32: void }
-  | { U32: void }
-  | { F32: void }
-  | { I64: void }
-  | { U64: void }
-  | { F64: void }
-  | { I128: void }
-  | { U128: void }
-  | { F128: void }
-  | { String: void }
-  | { Array: AlgebraicType }
-  | {
-      Map: {
-        key_type: AlgebraicType;
-        ty: AlgebraicType;
-      };
-    };
-
-export interface AlgebraicType {
+/**
+ * Wire AlgebraicType as returned by schema?version=9.
+ * Builtins are flattened (e.g. `{ "String": [] }`), not wrapped in `Builtin`.
+ */
+export type AlgebraicType = {
   Sum?: SumType;
   Product?: ProductType;
-  Builtin?: BuiltinType;
   Ref?: number;
-}
+  Bool?: unknown;
+  I8?: unknown;
+  U8?: unknown;
+  F8?: unknown;
+  I16?: unknown;
+  U16?: unknown;
+  F16?: unknown;
+  I32?: unknown;
+  U32?: unknown;
+  F32?: unknown;
+  I64?: unknown;
+  U64?: unknown;
+  F64?: unknown;
+  I128?: unknown;
+  U128?: unknown;
+  U256?: unknown;
+  F128?: unknown;
+  String?: unknown;
+  Array?: AlgebraicType;
+  Map?: {
+    key_type?: AlgebraicType;
+    key_ty?: AlgebraicType;
+    ty: AlgebraicType;
+  };
+  Builtin?: unknown;
+};
 
 export type IndexAlgorithm = { BTree: number[] };
 
@@ -114,12 +116,27 @@ export interface Type {
   custom_ordering: boolean;
 }
 
+/** View definition from RawModuleDefV9.misc_exports */
+export interface RawViewDefV9 {
+  name: string;
+  index: number;
+  is_public: boolean;
+  is_anonymous: boolean;
+  params: ProductType;
+  return_type: AlgebraicType;
+}
+
+export type RawMiscModuleExportV9 =
+  | { ColumnDefaultValue: unknown }
+  | { Procedure: unknown }
+  | { View: RawViewDefV9 };
+
 export type RawModuleRef9 = {
   typespace: { types: AlgebraicType[] };
   tables: Table[];
   reducers: Reducer[];
   types: Type[];
-  misc_exports: unknown[];
+  misc_exports: RawMiscModuleExportV9[];
   row_level_security: unknown[];
 };
 

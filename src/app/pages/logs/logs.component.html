@@ -1,4 +1,12 @@
 <div class="flex flex-col gap-4 grow">
+  @if (accessError) {
+    <p-message
+      severity="warn"
+      [text]="accessError"
+      styleClass="w-full"
+      icon="pi pi-lock"
+    />
+  }
   <p-card>
     <div class="flex gap-3">
       <p-inputgroup class="!w-1/5">
@@ -11,6 +19,7 @@
           placeholder="Filter level"
           [(ngModel)]="selectedLevels"
           (onChange)="filterLogLevels()"
+          [disabled]="!!accessError"
         />
       </p-inputgroup>
       <p-inputgroup styleClass="!w-1/4">
@@ -21,6 +30,7 @@
           pInputText
           placeholder="Filter file"
           (input)="filterFiles($event)"
+          [disabled]="!!accessError"
         />
       </p-inputgroup>
       <p-inputgroup>
@@ -31,6 +41,7 @@
           pInputText
           placeholder="Filter logs"
           (input)="filterLogs($event)"
+          [disabled]="!!accessError"
         />
       </p-inputgroup>
     </div>
@@ -38,20 +49,30 @@
   <p-card
     styleClass="flex grow w-full h-(--logs-container-height) overflow-scroll"
   >
-    @if (lines$ | async; as lines) {
-      @for (line of lines | reverseIterable; track $index) {
-        <div class="log-line" [ngClass]="line.level">
-          <span class="text-neutral-400 mr-2">{{ line.ts.toISOString() }}</span>
-          <span class="level" [ngClass]="line.level"
-            ><i class="mr-1" [ngClass]="getLevelIcon(line.level)"></i
-            >{{ line.level }}</span
-          >
-          <span class="ml-1.5 text-yellow-400">{{ printFilename(line) }}</span
-          >: {{ line.message }}
-        </div>
-      } @empty {
-        <p class="text-center">No logs found.</p>
+    @if (!accessError) {
+      @if (lines$ | async; as lines) {
+        @for (line of lines | reverseIterable; track $index) {
+          <div class="log-line" [ngClass]="line.level">
+            <span class="text-neutral-400 mr-2">{{
+              line.ts.toISOString()
+            }}</span>
+            <span class="level" [ngClass]="line.level"
+              ><i class="mr-1" [ngClass]="getLevelIcon(line.level)"></i
+              >{{ line.level }}</span
+            >
+            <span class="ml-1.5 text-yellow-400">{{
+              printFilename(line)
+            }}</span
+            >: {{ line.message }}
+          </div>
+        } @empty {
+          <p class="text-center">No logs found.</p>
+        }
       }
+    } @else {
+      <p class="text-center text-neutral-400 p-8">
+        Logs are unavailable with the current identity.
+      </p>
     }
   </p-card>
 </div>

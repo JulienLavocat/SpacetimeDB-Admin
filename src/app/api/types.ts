@@ -19,21 +19,16 @@ export type StdbTypes =
   | "String"
   | "Array"
   | "Ref"
-  | "Product";
+  | "Product"
+  | "Sum"
+  | "Map"
+  | "Identity";
 
-export type AlgebraicType = Record<StdbTypes, never[]> & {
-  Array: Record<StdbTypes, never[]>;
-  Product: {
-    elements: {
-      name: string | RustOption<string>;
-      algebraic_type: AlgebraicType;
-    }[];
-  };
-};
+export type AlgebraicType = Record<string, any>;
 
 export interface RustOption<T> {
   some?: T;
-  none?: void;
+  none?: void | unknown[];
 }
 
 export interface RawReducer {
@@ -49,11 +44,7 @@ export interface RawReducer {
 }
 
 export interface Typespace {
-  types: {
-    Product: {
-      elements: { name: RustOption<string>; algebraic_type: AlgebraicType }[];
-    };
-  }[];
+  types: AlgebraicType[];
 }
 
 export interface Type {
@@ -70,6 +61,7 @@ export interface RawSchema {
   reducers: RawReducer[];
   typespace: Typespace;
   types: Type[];
+  misc_exports?: any[];
 }
 
 export interface LogLine {
