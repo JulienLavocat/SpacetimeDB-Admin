@@ -1,0 +1,73 @@
+@if (isLoading()) {
+  <p-progressSpinner></p-progressSpinner>
+} @else {
+  <p-splitter styleClass="h-full" [panelSizes]="[20, 80]">
+    <ng-template #panel>
+      <div class="max-h-full overflow-y-auto">
+        <input
+          (input)="onFilterViewsChange($event)"
+          pInputText
+          placeholder="Filter views"
+          class="w-full mb-2"
+        />
+        @if (views().length === 0) {
+          <p-message
+            styleClass="m-2"
+            severity="info"
+            text="No views in this module schema."
+          />
+        }
+        @for (view of views(); track view.name) {
+          <p-button
+            variant="text"
+            styleClass="w-full text-left justify-start! mb-1"
+            severity="contrast"
+            [label]="view.name"
+            (onClick)="openView(view)"
+          />
+        }
+      </div>
+    </ng-template>
+    <ng-template #panel>
+      @if (tabs().length === 0) {
+        <div class="flex flex-col grow h-full">
+          <p-message
+            styleClass="m-4"
+            severity="info"
+            text="No views opened yet. Click on a view to open it. Results use the identity from Settings (or anonymous if no token)."
+          />
+        </div>
+      } @else {
+        <p-tabs
+          [value]="selectedTab()"
+          class="flex grow rounded-sm max-w-full"
+          scrollable
+          lazy
+          (valueChange)="onTabChange($event)"
+        >
+          <p-tablist>
+            @for (tab of tabs(); track $index) {
+              <p-tab [value]="tab.id">
+                <span class="pl-2">{{ tab.id }}</span>
+                <p-button
+                  icon="pi pi-times"
+                  rounded
+                  text
+                  severity="danger"
+                  (onClick)="closeTab(tab.id)"
+                ></p-button>
+              </p-tab>
+            }
+          </p-tablist>
+          <p-tabpanels class="grow">
+            @for (tab of tabs(); track tab) {
+              <p-tabpanel [value]="tab.id" class="h-full">
+                <app-view-tab [view]="tab.view"></app-view-tab>
+              </p-tabpanel>
+            }
+          </p-tabpanels>
+        </p-tabs>
+      }
+    </ng-template>
+  </p-splitter>
+}

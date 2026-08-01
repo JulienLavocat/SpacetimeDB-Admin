@@ -34,7 +34,7 @@ export class SettingsComponent {
   private readonly toast = inject(MessageService);
 
   form = this.fb.group({
-    token: ["", Validators.required],
+    token: [""], // optional — empty means anonymous identity
     instanceUrl: ["", Validators.required],
     database: ["", Validators.required],
   });
@@ -50,7 +50,6 @@ export class SettingsComponent {
   );
 
   onSubmit() {
-    console.log(this.form.valid);
     if (!this.form.valid) return;
 
     const values = this.form.value;
@@ -59,7 +58,7 @@ export class SettingsComponent {
         new SetDatabaseInfo(
           values.instanceUrl!,
           values.database!,
-          values.token!,
+          values.token ?? "",
         ),
       )
       .pipe(
@@ -76,11 +75,19 @@ export class SettingsComponent {
 
   test() {
     const values = this.form.value;
+    if (!values.instanceUrl || !values.database) {
+      this.toast.add({
+        severity: "warn",
+        summary: "Missing fields",
+        detail: "Instance URL and database name are required",
+      });
+      return;
+    }
     this.store.dispatch(
       new TestDatabaseConnectionAction(
-        values.instanceUrl!,
-        values.database!,
-        values.token!,
+        values.instanceUrl,
+        values.database,
+        values.token ?? "",
       ),
     );
   }

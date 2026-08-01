@@ -7,10 +7,12 @@ import { CardModule } from "primeng/card";
 import { InputGroupModule } from "primeng/inputgroup";
 import { InputGroupAddonModule } from "primeng/inputgroupaddon";
 import { InputTextModule } from "primeng/inputtext";
+import { MessageModule } from "primeng/message";
 import { MultiSelectModule } from "primeng/multiselect";
 import { ScrollerModule } from "primeng/scroller";
-import { repeat, tap } from "rxjs";
+import { tap } from "rxjs";
 import { ApiService } from "../../api/api.service";
+import { LogsAccessError } from "../../api/logs-fetcher";
 import {
   AppendLogLine,
   ClearLogs,
@@ -44,6 +46,7 @@ const levelsIcons: Record<string, string> = {
     MultiSelectModule,
     AsyncPipe,
     ReverseIterablePipe,
+    MessageModule,
   ],
   templateUrl: "./logs.component.html",
   styleUrl: "./logs.component.css",
@@ -56,16 +59,31 @@ export class LogsComponent implements OnInit, OnDestroy {
   levelsOptions = ["trace", "debug", "info", "warn", "error", "panic"];
   selectedLevels = this.levelsOptions;
   cancelSubscribption?: () => void;
+  accessError: string | null = null;
 
   ngOnInit() {
     const [events$, cancelSubscribption] = this.api.getLogs();
     this.cancelSubscribption = cancelSubscribption;
     events$
-      .pipe(
-        repeat({ delay: 10 }),
-        tap((line) => this.store.dispatch(new AppendLogLine(line))),
-      )
-      .subscribe();
+      .pipe(tap((line) => this.store.dispatch(new AppendLogLine(line))))
+      .subscribe({
+        error: (err) => {
+          this.accessError = this.formatAccessError(err);
+        },
+      });
+  }
+
+  private formatAccessError(err: unknown): string {
+    if (err instanceof LogsAccessError) {
+      if (err.status === 401 || err.status === 403) {
+        return "Owner only — viewing database logs requires the database owner's identity token. You can still use Explorer, SQL, Reducers, Views, and Schema with a non-owner or anonymous identity.";
+      }
+      return `Failed to load logs (HTTP ${err.status}): ${err.message}`;
+    }
+    if (err && typeof err === "object" && "message" in err) {
+      return String((err as Error).message);
+    }
+    return "Failed to load logs. Viewing logs requires the database owner's token.";
   }
 
   ngOnDestroy(): void {

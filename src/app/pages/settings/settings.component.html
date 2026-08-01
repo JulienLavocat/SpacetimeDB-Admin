@@ -1,70 +1,42 @@
 @if (form$ | async) {
-  <div class="mx-auto">
-    <p-card
-      class="mx-auto block max-w-lg text-center"
-      header="Connection settings"
-    >
-      <form
-        [formGroup]="form"
-        class="mt-2 flex flex-col gap-2"
-        (submit)="onSubmit()"
-      >
-        <p-floatlabel variant="on">
-          <input
-            id="instance-url-input"
-            class="w-full"
-            type="text"
-            pInputText
-            formControlName="instanceUrl"
-          />
-          <label for="instance-url-input"
-            >Instance URL (http://localhost:3000)</label
-          >
-        </p-floatlabel>
-        <p-floatlabel variant="on">
-          <input
-            id="database-input"
-            class="w-full"
-            type="text"
-            pInputText
-            formControlName="database"
-          />
-          <label for="database-input">Database name (my-module)</label>
-        </p-floatlabel>
-        <p-floatlabel variant="on">
-          <input
-            id="token-input"
-            class="w-full"
-            type="text"
-            pInputText
-            formControlName="token"
-          />
-          <label for="token-input">Token (eyJ...)</label>
-        </p-floatlabel>
-        <div class="flex justify-between">
-          <p-button
-            label="Test connection"
-            icon="pi pi-sign-in"
-            severity="contrast"
-            variant="outlined"
-            class="mt-2 self-end"
-            (onClick)="test()"
-          />
-          <p-button
-            label="Save"
-            icon="pi pi-save"
-            class="mt-2 self-end"
-            [disabled]="!form.valid"
-            type="submit"
-          />
-        </div>
-      </form>
-      <p class="text-center mt-8">
-        To find your token:<br />
-        1. Login to your instance using the CLI (spacetime login)<br />
-        2. Open: ~/.config/spacetime/cli.toml<br />
-        3. Your token should now be available after "spacetimedb_token"
-      </p>
-    </p-card>
-  </div>
+<div class="mx-auto">
+	<p-card class="mx-auto block max-w-lg text-center"
+	        header="Connection settings"
+	>
+		<form [formGroup]="form"
+		      class="mt-2 flex flex-col gap-2"
+		      (submit)="onSubmit()"
+		>
+			<p-floatlabel variant="on">
+				<input id="instance-url-input" class="w-full" type="text" pInputText formControlName="instanceUrl">
+				<label for="instance-url-input">Instance URL (http://localhost:3000)</label>
+			</p-floatlabel>
+			<p-floatlabel variant="on">
+				<input id="database-input" class="w-full" type="text" pInputText formControlName="database">
+				<label for="database-input">Database name (my-module)</label>
+			</p-floatlabel>
+			<p-floatlabel variant="on">
+				<input id="token-input" class="w-full" type="text" pInputText formControlName="token">
+				<label for="token-input">Token (optional — leave empty for anonymous)</label>
+			</p-floatlabel>
+			<div class="flex justify-between">
+				<p-button label="Test connection" icon="pi pi-sign-in" severity="contrast" variant="outlined" class="mt-2 self-end" (onClick)="test()"/>
+				<p-button label="Save" icon="pi pi-save" class="mt-2 self-end" [disabled]="!form.valid" type="submit"/>
+			</div>
+		</form>
+		<div class="mt-8 text-sm text-neutral-400 space-y-2 text-center">
+			<p>
+				Leave the token empty to connect
+				<strong>anonymously</strong>
+				(host allocates a temporary identity).
+			</p>
+			<p class="mt-4">
+				DB Owner CLI token:<br>
+				1. Login with <code>spacetime login</code><br>
+				2. Open <code>~/.config/spacetime/cli.toml</code><br>
+				3. Copy <code>spacetimedb_token</code>
+			</p>
+		</div>
+	</p-card>
+</div>
 }

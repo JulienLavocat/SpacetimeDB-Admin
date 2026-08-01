@@ -1,6 +1,16 @@
 import { Subject } from "rxjs";
 import { LogLine } from "./types";
 
+export class LogsAccessError extends Error {
+  constructor(
+    message: string,
+    public readonly status: number,
+  ) {
+    super(message);
+    this.name = "LogsAccessError";
+  }
+}
+
 export function streamLogs(
   instanceUrl: string,
   database: string,
@@ -9,21 +19,43 @@ export function streamLogs(
   const url = `${instanceUrl}/v1/database/${database}/logs?follow=true&num_lines=1000`;
   const subject = new Subject<LogLine[]>();
   const cancellation = new AbortController();
+
   const cancel = () => {
     cancellation.abort();
     subject.complete();
   };
 
   const pump = async () => {
-    console.log("PUMPING");
     while (!subject.closed) {
-      console.log("feetching data");
-      await fetch(url, {
-        headers: { Authorization: "Bearer " + token },
-        signal: cancellation.signal,
-      }).then((r) => readLogsFromResponse(r, subject));
+      try {
+        const headers: Record<string, string> = {};
+        if (token) {
+          headers["Authorization"] = "Bearer " + token;
+        }
+
+        const response = await fetch(url, {
+          headers,
+          signal: cancellation.signal,
+        });
+
+        if (!response.ok) {
+          const body = await response.text().catch(() => "");
+          subject.error(
+            new LogsAccessError(
+              body || response.statusText || `HTTP ${response.status}`,
+              response.status,
+            ),
+          );
+          return;
+        }
+
+        await readLogsFromResponse(response, subject);
+      } catch (e: any) {
+        if (e?.name === "AbortError") return;
+        subject.error(e);
+        return;
+      }
     }
-    console.log("WE OUT BABYYYYY");
   };
 
   return [subject, pump, cancel];
@@ -32,18 +64,10 @@ export function streamLogs(
 async function readLogsFromResponse(r: Response, subject: Subject<LogLine[]>) {
   const reader = r.body?.getReader();
   if (reader == null) return;
-  console.log("entering reader");
 
   while (true) {
-    console.log("waiting for data");
     const { value, done } = await reader.read();
-
-    if (done) {
-      console.log("read complete", done);
-      break;
-    }
-
-    console.log("data received, parsing");
+    if (done) break;
     parseLogsChunk(value, subject);
   }
 }
@@ -53,15 +77,17 @@ function parseLogsChunk(chunk: Uint8Array, subject: Subject<LogLine[]>) {
   new TextDecoder()
     .decode(chunk)
     .split("\n")
-    .map((element) => {
+    .forEach((element) => {
       if (element) {
         try {
           const line = JSON.parse(element);
           line.ts = new Date(line.ts / 1000);
           line.level = line.level.toLowerCase();
           lines.push(line);
-        } catch (e) {}
+        } catch {
+          // ignore partial/invalid lines
+        }
       }
     });
-  subject.next(lines);
+  if (lines.length) subject.next(lines);
 }

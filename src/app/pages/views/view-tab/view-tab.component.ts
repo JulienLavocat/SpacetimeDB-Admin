@@ -5,15 +5,16 @@ import { InputGroupModule } from "primeng/inputgroup";
 import { InputGroupAddonModule } from "primeng/inputgroupaddon";
 import { ButtonModule } from "primeng/button";
 import { TableModule } from "primeng/table";
-import { ApiService, Table } from "../../../api";
+import { ApiService, View } from "../../../api";
 import { DividerModule } from "primeng/divider";
 import { catchError, of, take, tap } from "rxjs";
 import { MessageModule } from "primeng/message";
 import { SelectChangeEvent, SelectModule } from "primeng/select";
 import { algebraicTypeToColumn, parseRows } from "../../../api/sql.parser";
+import { TagModule } from "primeng/tag";
 
 @Component({
-  selector: "app-explorer-tab",
+  selector: "app-view-tab",
   imports: [
     InputTextModule,
     FormsModule,
@@ -24,14 +25,15 @@ import { algebraicTypeToColumn, parseRows } from "../../../api/sql.parser";
     DividerModule,
     MessageModule,
     SelectModule,
+    TagModule,
   ],
-  templateUrl: "./explorer-tab.component.html",
-  styleUrl: "./explorer-tab.component.scss",
+  templateUrl: "./view-tab.component.html",
+  styleUrl: "./view-tab.component.scss",
 })
-export class ExplorerTabComponent implements OnInit, OnDestroy {
+export class ViewTabComponent implements OnInit, OnDestroy {
   private readonly apiService = inject(ApiService);
 
-  readonly table = input.required<Table>();
+  readonly view = input.required<View>();
 
   isLoading: boolean = true;
   whereClause: string = "";
@@ -41,13 +43,11 @@ export class ExplorerTabComponent implements OnInit, OnDestroy {
   tableColumns!: string[];
   error?: string;
 
-  // Paginator
   firstRow: number = 0;
   rowsPerPage: number = 25;
   availableRows: number[] = [10, 25, 50, 100, 1000];
   allSelected: boolean = false;
 
-  // Auto refresh
   autoRefreshInterval: number = 5000;
   availableIntervals: { value: number; name: string }[] = [
     { value: 0, name: "Off" },
@@ -60,8 +60,8 @@ export class ExplorerTabComponent implements OnInit, OnDestroy {
   autoRefreshTimer?: number;
 
   ngOnInit(): void {
-    this.tableColumns = this.table().columns.map((e) => e.name);
-    this.queryTable();
+    this.tableColumns = this.view().columns.map((e) => e.name);
+    this.queryView();
   }
 
   ngOnDestroy(): void {
@@ -71,8 +71,8 @@ export class ExplorerTabComponent implements OnInit, OnDestroy {
     }
   }
 
-  queryTable(): void {
-    let query = `SELECT * FROM ${this.table().name}`;
+  queryView(): void {
+    let query = `SELECT * FROM ${this.view().name}`;
     if (this.whereClause.trim() !== "") {
       query += ` WHERE ${this.whereClause}`;
     }
@@ -101,9 +101,9 @@ export class ExplorerTabComponent implements OnInit, OnDestroy {
           this.allSelected = this.rowsPerPage >= this.totalRows;
         }),
         catchError((error: any) => {
-          console.error("Error running query:", error);
+          console.error("Error running view query:", error);
           this.error =
-            error.error || "An error occurred while running the query.";
+            error.error || "An error occurred while querying the view.";
           this.rows = [];
           this.totalRows = 0;
           this.isLoading = false;
@@ -115,14 +115,14 @@ export class ExplorerTabComponent implements OnInit, OnDestroy {
 
   onWhereClauseChange(event: KeyboardEvent): void {
     if (event.key === "Enter") {
-      this.queryTable();
+      this.queryView();
     }
   }
 
   next(): void {
     this.firstRow = Math.min(
       this.firstRow + this.rowsPerPage,
-      this.totalRows - this.rowsPerPage,
+      Math.max(0, this.totalRows - this.rowsPerPage),
     );
   }
 
@@ -135,11 +135,10 @@ export class ExplorerTabComponent implements OnInit, OnDestroy {
   }
 
   last(): void {
-    this.firstRow = this.totalRows - this.rowsPerPage;
+    this.firstRow = Math.max(0, this.totalRows - this.rowsPerPage);
   }
 
   onRowsPerPageChange(): void {
-    console.log("Rows per page changed to:", this.rowsPerPage);
     this.allSelected = this.rowsPerPage >= this.totalRows;
   }
 
@@ -157,9 +156,9 @@ export class ExplorerTabComponent implements OnInit, OnDestroy {
     }
 
     this.autoRefreshTimer = window.setInterval(() => {
-      this.queryTable();
+      this.queryView();
     }, event.value.value);
 
-    this.queryTable();
+    this.queryView();
   }
 }

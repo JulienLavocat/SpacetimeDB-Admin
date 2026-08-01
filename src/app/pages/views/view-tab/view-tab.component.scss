@@ -7,14 +7,22 @@
   overflow: hidden;
 }
 
-::ng-deep .p-select-list-container {
-  max-height: unset !important;
+.view-tab-root {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
 }
 
+.view-tab-toolbar {
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+
+/* Keep the datatable scroll container within the host width */
 :host ::ng-deep {
   .p-datatable,
   .p-datatable-table-container {
     max-width: 100%;
   }
 }
-

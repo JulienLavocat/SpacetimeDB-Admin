@@ -1,0 +1,119 @@
+@let t = type();
+
+@switch (t.kind) {
+  @case ("unit") {
+    <span class="text-neutral-500 text-sm">()</span>
+  }
+
+  @case ("primitive") {
+    @if (t.name === "Bool") {
+      <p-checkBox
+        [formControl]="boolControl"
+        binary
+        [pTooltip]="tooltip(t)"
+        tooltipPosition="bottom"
+      />
+    } @else {
+      <input
+        class="reducer-input"
+        pInputText
+        [type]="
+          t.name.startsWith('I') ||
+          t.name.startsWith('U') ||
+          t.name.startsWith('F')
+            ? 'text'
+            : 'text'
+        "
+        [formControl]="simpleControl"
+        [placeholder]="placeholder(t)"
+        [pTooltip]="tooltip(t)"
+        tooltipPosition="bottom"
+      />
+    }
+  }
+
+  @case ("identity") {
+    <input
+      class="reducer-input identity-input"
+      pInputText
+      type="text"
+      [formControl]="simpleControl"
+      [placeholder]="placeholder(t)"
+      [pTooltip]="tooltip(t)"
+      tooltipPosition="bottom"
+    />
+  }
+
+  @case ("array") {
+    @if (usesJsonEditor(t)) {
+      <textarea
+        pTextarea
+        class="json-input"
+        rows="2"
+        [formControl]="simpleControl"
+        [placeholder]="placeholder(t)"
+        [pTooltip]="tooltip(t)"
+        tooltipPosition="bottom"
+      ></textarea>
+    } @else {
+      <input
+        class="reducer-input"
+        pInputText
+        type="text"
+        [formControl]="simpleControl"
+        [placeholder]="placeholder(t)"
+        [pTooltip]="tooltip(t)"
+        tooltipPosition="bottom"
+      />
+    }
+  }
+
+  @case ("product") {
+    <div class="product-fields" [formGroup]="productGroup">
+      @for (field of t.fields; track field.name) {
+        <div class="field-row">
+          <span class="field-name"
+            >{{ field.name }}:
+            <span class="type-hint">{{ typeLabel(field.type) | lowercase }}</span></span
+          >
+          <app-type-field
+            [type]="field.type"
+            [formControlName]="field.name"
+          />
+        </div>
+      }
+    </div>
+  }
+
+  @case ("sum") {
+    <div class="sum-fields">
+      <p-select
+        [options]="sumVariants"
+        optionLabel="name"
+        optionValue="name"
+        [formControl]="sumVariantControl"
+        placeholder="Variant"
+        appendTo="body"
+        styleClass="variant-select"
+      />
+      @if (selectedSumVariantType.kind !== "unit") {
+        <app-type-field
+          [type]="selectedSumVariantType"
+          [formControl]="sumPayloadControl"
+        />
+      }
+    </div>
+  }
+
+  @case ("unknown") {
+    <textarea
+      pTextarea
+      class="json-input"
+      rows="2"
+      [formControl]="simpleControl"
+      [placeholder]="placeholder(t)"
+      [pTooltip]="tooltip(t)"
+      tooltipPosition="bottom"
+    ></textarea>
+  }
+}

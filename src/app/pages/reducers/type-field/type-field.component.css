@@ -1,0 +1,61 @@
+.reducer-input {
+  min-width: 6rem;
+  max-width: 18rem;
+  margin: 0 0.25rem;
+}
+
+.identity-input {
+  min-width: 12rem;
+  max-width: 28rem;
+  font-family: ui-monospace, monospace;
+  font-size: 0.85em;
+}
+
+.json-input {
+  min-width: 12rem;
+  max-width: 28rem;
+  font-family: ui-monospace, monospace;
+  font-size: 0.8em;
+  vertical-align: middle;
+}
+
+.product-fields {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0 0.25rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--p-content-border-color, #444);
+  border-radius: 0.35rem;
+  vertical-align: middle;
+}
+
+.field-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.field-name {
+  font-size: 0.85em;
+  color: var(--p-text-muted-color, #aaa);
+  min-width: 4rem;
+}
+
+.type-hint {
+  opacity: 0.7;
+  font-size: 0.9em;
+}
+
+.sum-fields {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0.25rem;
+}
+
+:host ::ng-deep .variant-select {
+  min-width: 8rem;
+}
