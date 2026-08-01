@@ -1,6 +1,31 @@
 :host {
-  display: flex;
-  flex-grow: 1;
+  /* Match Explorer: block host so the splitter/tabs can shrink within the page */
+  display: block;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   height: 100%;
+  --p-tabs-tab-padding: 0.3rem 0.5rem;
+}
+
+/*
+ * Flex/splitter/tabs children default to min-width:auto, which expands to the
+ * table's full content width and breaks p-table's internal horizontal scroll.
+ * Force them to respect the parent width so the table can scroll fully.
+ */
+:host ::ng-deep {
+  .p-splitter,
+  .p-splitter-panel,
+  .p-tabs,
+  .p-tablist,
+  .p-tabpanels,
+  .p-tabpanel {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .p-tabpanels,
+  .p-tabpanel {
+    overflow: hidden;
+  }
 }

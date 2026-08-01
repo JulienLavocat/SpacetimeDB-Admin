@@ -1,4 +1,4 @@
-<div>
+<div class="view-tab-root">
   <div class="flex items-center gap-4 mb-2">
     @if (view().isAnonymous) {
       <p-tag severity="secondary" value="Anonymous view" />
@@ -6,7 +6,7 @@
       <p-tag severity="info" value="Caller-identity view" />
     }
   </div>
-  <div class="flex items-center gap-4">
+  <div class="view-tab-toolbar flex items-center gap-4">
     <div class="flex items-center gap-2">
       <p-button
         text

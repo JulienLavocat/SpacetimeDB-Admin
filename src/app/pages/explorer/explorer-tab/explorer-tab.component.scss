@@ -1,8 +1,20 @@
 :host {
+  display: block;
   height: 100%;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 ::ng-deep .p-select-list-container {
   max-height: unset !important;
 }
+
+:host ::ng-deep {
+  .p-datatable,
+  .p-datatable-table-container {
+    max-width: 100%;
+  }
+}
+
