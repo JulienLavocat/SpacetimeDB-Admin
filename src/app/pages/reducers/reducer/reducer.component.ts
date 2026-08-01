@@ -1,5 +1,11 @@
 import { NgClass } from "@angular/common";
-import { Component, inject, Input, OnInit } from "@angular/core";
+import {
+  Component,
+  inject,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
@@ -29,8 +35,8 @@ import { TypeFieldComponent } from "../type-field/type-field.component";
   templateUrl: "./reducer.component.html",
   styleUrl: "./reducer.component.css",
 })
-export class ReducerComponent implements OnInit {
-  @Input("reducer") reducer!: Reducer;
+export class ReducerComponent implements OnChanges {
+  @Input({ required: true }) reducer!: Reducer;
 
   private readonly api = inject(ApiService);
   private readonly toast = inject(MessageService);
@@ -40,7 +46,16 @@ export class ReducerComponent implements OnInit {
   form: FormGroup = this.fb.group({});
   typeLabel = typeLabel;
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    // Rebuild the form whenever the bound reducer changes. With a stable
+    // track-by name this is mainly for safety; it also fixes stale forms if
+    // Angular ever reuses the component instance.
+    if (changes["reducer"] && this.reducer) {
+      this.rebuildForm();
+    }
+  }
+
+  private rebuildForm(): void {
     this.form = this.fb.group(
       Object.fromEntries(
         this.reducer.params.map((param) => [param.name, null]),
